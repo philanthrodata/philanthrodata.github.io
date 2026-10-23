@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' blob:; worker-src blob:; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="description" content="A private, offline CSV duplicate review tool for Marketo and Salesforce leads and contacts.">
+<title>Marketo + Salesforce Duplicate Check</title>
+<style>
+:root{color-scheme:light;--bg:#f3f5f8;--paper:#fff;--ink:#17283e;--muted:#53647b;--line:#d7dfe9;--navy:#172d4d;--blue:#294fbd;--blue-soft:#edf1ff;--green:#22684f;--green-soft:#e8f4ed;--amber:#815509;--amber-soft:#fff3da;--red:#a63838;--red-soft:#fbecee;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--serif:"Iowan Old Style","Palatino Linotype",Georgia,serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:20px}body{margin:0;font:14px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}button,input,select{font:inherit}button,select,input[type=number],input[type=search]{border:1px solid var(--line);border-radius:7px;color:var(--ink);background:var(--paper);padding:8px 11px}button{cursor:pointer;font-weight:600}button:hover:not(:disabled){border-color:var(--blue);background:var(--blue-soft)}button:disabled{opacity:.45;cursor:not-allowed}.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.primary:hover:not(:disabled){background:#1d3c99;color:#fff}.quiet{background:transparent}.small{font-size:12px;padding:5px 9px}a{color:var(--blue);text-underline-offset:3px}a:hover{color:var(--navy)}:focus-visible{outline:3px solid #8ba7ff;outline-offset:3px}h1,h2,h3,p{margin:0}h1{font:500 clamp(31px,4vw,45px)/1.12 var(--serif);letter-spacing:-.02em}h2{font:500 25px/1.2 var(--serif);letter-spacing:-.01em}h3{font-size:15px;line-height:1.4}.muted{color:var(--muted)}.eyebrow{font-size:11px;font-weight:750;letter-spacing:.12em;text-transform:uppercase}.mono{font-family:var(--mono);font-size:12px}.num{font-variant-numeric:tabular-nums}.topbar{background:var(--navy);color:#dce6fa}.topbar>div{max-width:1220px;padding:11px 24px;margin:auto;display:flex;justify-content:space-between;gap:14px;align-items:center}.brand{letter-spacing:.06em;font-size:11px;font-weight:700;text-transform:uppercase}.offline{display:flex;align-items:center;gap:7px;font-size:12px}.dot{width:6px;height:6px;border-radius:50%;background:#9bd8b5;display:inline-block;flex:none}.wrap{max-width:1220px;padding:32px 24px 56px;margin:auto;display:flex;flex-direction:column;gap:24px}header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;border-bottom:1px solid var(--line);padding-bottom:24px}header .eyebrow{color:var(--blue);margin-bottom:10px}header p{font-size:15px;max-width:65ch;margin-top:12px;color:var(--muted)}.header-tag{font-size:12px;background:var(--paper);border:1px solid var(--line);padding:8px 12px;border-radius:6px;white-space:nowrap}.intake{display:grid;grid-template-columns:1.45fr 1fr;gap:18px}.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:23px;min-width:0}.drop{display:flex;flex-direction:column;gap:14px;border-style:dashed;border-color:#a9b9d0;justify-content:center}.drop.over{background:var(--blue-soft);border-color:var(--blue)}.step{font:600 11px/1 var(--mono);color:var(--blue);letter-spacing:.07em;text-transform:uppercase}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.guide{background:#eaf0f6;display:flex;flex-direction:column;gap:12px}.guide ol{padding-left:20px;margin:0;color:var(--muted);font-size:13px}.guide li+li{margin-top:6px}.guide b{color:var(--ink)}.hint{font-size:12px;color:var(--muted)}.pill{display:inline-flex;border-radius:4px;padding:3px 7px;font-size:10.5px;line-height:1.5;font-weight:750;letter-spacing:.025em;white-space:nowrap}.marketo{background:#f0eafe;color:#6941a2}.salesforce{background:#e5f3fc;color:#126184}.other{background:#eef0f3;color:#48566b}.strong{background:var(--green-soft);color:var(--green)}.probable{background:var(--blue-soft);color:var(--blue)}.review{background:var(--amber-soft);color:var(--amber)}.linked{background:#eef1f5;color:#435571}.sample{background:var(--amber-soft);color:var(--amber)}#files{display:flex;flex-direction:column;gap:10px}.file-card{background:var(--paper);border:1px solid var(--line);border-radius:9px;overflow:hidden}.file-top{display:flex;align-items:center;gap:10px;padding:13px 16px;flex-wrap:wrap}.file-name{font-weight:650;overflow-wrap:anywhere}.file-controls{display:flex;align-items:center;gap:7px;margin-left:auto;flex-wrap:wrap}.file-controls label{font-size:12px;color:var(--muted)}.file-controls select{padding:5px 8px;font-size:12px}.file-card details{border-top:1px solid var(--line)}summary{cursor:pointer;padding:11px 16px;font-size:12px;font-weight:600;color:var(--muted)}.map-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:5px 16px 17px}.map-grid label{font-size:11px;font-weight:600;color:var(--muted);display:flex;flex-direction:column;gap:4px}.map-grid select{min-width:0;width:100%;font-size:12px;padding:7px}.file-note{padding:0 16px 13px;font-size:12px;color:var(--amber)}.toolbar{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}.toolbar label{font-size:12px;font-weight:600;color:var(--muted);display:flex;flex-direction:column;gap:5px}.toolbar .run{margin-left:auto;display:flex;align-items:center;gap:9px}.alert{border-left:3px solid var(--amber);background:var(--amber-soft);color:#654307;padding:12px 15px;border-radius:5px;font-size:13px}.alert.error{border-color:var(--red);background:var(--red-soft);color:var(--red)}.alert.info{background:var(--blue-soft);color:#324b88;border-color:var(--blue)}[hidden]{display:none!important}#status{font-size:12px;color:var(--muted);min-height:18px}#busy{font-weight:600;color:var(--blue)}.results-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.results-head>div{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.metric{border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:18px}.metric .v{font:500 38px/1.05 var(--serif);margin:7px 0 6px}.metric .l{font-size:12px;color:var(--muted)}.metric .sub{margin-top:8px;font-size:11px;color:var(--muted)}.metric.featured{background:var(--navy);color:#fff;border-color:var(--navy)}.metric.featured .l,.metric.featured .sub{color:#c4d1e6}.sec-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:12px;margin-bottom:17px}.sec-head p{font-size:13px;color:var(--muted);margin-top:6px;max-width:85ch}.validation{background:var(--green-soft);border:1px solid #c7dece;border-radius:8px;padding:12px 15px;font-size:13px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.validation.bad{background:var(--red-soft);border-color:#e1c2c2}.filters{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 16px}.filter-buttons{display:flex;gap:5px;flex-wrap:wrap}.filter-buttons button{font-size:12px;padding:7px 10px;background:var(--bg)}.filter-buttons button[aria-pressed=true]{background:var(--navy);color:#fff;border-color:var(--navy)}input[type=search]{max-width:320px;min-width:220px;font-size:12px}.match-list{display:flex;flex-direction:column;gap:12px}.match{border:1px solid var(--line);border-radius:8px;overflow:hidden}.match-head{padding:12px 14px;background:#f8f9fc;display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.match-head .reason{font-size:12px;margin-top:5px;color:var(--muted)}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:810px;text-align:left;font-size:12px}th{font-weight:650;font-size:10px;letter-spacing:.04em;text-transform:uppercase;background:#f8f9fc;color:var(--muted);padding:9px 12px;border-bottom:1px solid var(--line)}td{vertical-align:top;padding:10px 12px;border-bottom:1px solid #e8edf3;max-width:260px;overflow-wrap:anywhere}tr:last-child td{border-bottom:0}.subline{font-size:11px;color:var(--muted);margin-top:3px}.page-controls{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;font-size:12px;color:var(--muted)}.empty{padding:22px;border-radius:7px;background:var(--bg);font-size:13px;color:var(--muted)}.two-col{display:grid;grid-template-columns:1.25fr 1fr;gap:18px}.stack{height:25px;background:var(--bg);border-radius:5px;overflow:hidden;display:flex;margin:18px 0}.stack div{min-width:2px}.legend{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12px}.legend>div{display:flex;gap:7px;align-items:flex-start}.swatch{width:9px;height:9px;flex:none;margin-top:5px;border-radius:2px}.quality-item{display:flex;justify-content:space-between;gap:14px;border-bottom:1px solid #e8edf3;padding:9px 0;font-size:12px}.quality-item:last-child{border-bottom:0}.exports{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.export{border:1px solid var(--line);border-radius:9px;padding:17px;display:flex;flex-direction:column;gap:10px;background:#f8f9fc}.export p{font-size:12px;color:var(--muted);flex:1}.export button{align-self:flex-start}.export .toast{font-size:11px;color:var(--green);min-height:17px}.benchmark{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-top:12px}.benchmark label{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:5px}.benchmark input{width:180px}.benchmark-result{margin-top:12px;font-size:13px}.method{font-size:13px;color:var(--muted)}.method summary{padding:0;font-size:14px;color:var(--ink)}.method .content{padding-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:18px}.method p+p{margin-top:12px}.method b{color:var(--ink)}footer{border-top:1px solid var(--line);padding-top:16px;font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}.date-warning{font-size:12px;padding-top:13px;color:var(--amber)}#results{display:flex;flex-direction:column;gap:22px}.run-info{font-size:12px;color:var(--muted)}.nowrap{white-space:nowrap}.remove{color:var(--red)}.load-meter{height:3px;border-radius:2px;background:var(--blue-soft);margin-top:8px;overflow:hidden}.load-meter span{display:block;height:100%;width:35%;background:var(--blue);animation:busy 1.2s ease-in-out infinite}@keyframes busy{from{transform:translateX(-100%)}to{transform:translateX(390%)}}
+@media(max-width:950px){.map-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.intake,.two-col{grid-template-columns:1fr}.guide ol{display:flex;gap:28px;padding-left:18px}.guide li{flex:1}.guide li+li{margin-top:0}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.exports{grid-template-columns:1fr}.export{display:grid;grid-template-columns:1fr auto}.export p,.export .toast{grid-column:1/-1}.header-tag{display:none}}
+@media(max-width:600px){.wrap{padding:24px 14px 40px;gap:18px}.topbar>div{padding:10px 14px}.offline{font-size:10px}.brand{font-size:9px}.card{padding:17px}.map-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.guide ol{display:block}.guide li+li{margin-top:7px}.toolbar{gap:12px}.toolbar label,.toolbar select{width:100%}.toolbar .run{margin-left:0;width:100%}.toolbar .primary{flex:1}.metrics{gap:9px}.metric{padding:14px}.metric .v{font-size:32px}.method .content{grid-template-columns:1fr}.file-controls{margin-left:0}.file-top{gap:8px}.filters input{width:100%;max-width:none}.filter-buttons{width:100%}.legend{gap:10px}.match-head{flex-wrap:wrap}header{padding-bottom:20px}.header-tag{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.load-meter span{animation:none;width:100%}}
+@media print{.topbar,.intake,#files,.toolbar,.filters,.page-controls,#export-section,.benchmark,button{display:none!important}.wrap{max-width:none;padding:0}.card{break-inside:avoid}body{background:white}.metric.featured{color:var(--ink);background:white}.metric.featured .l,.metric.featured .sub{color:var(--muted)}}
+</style>
+</head>
+<body>
+<div class="topbar"><div><a class="brand" href="https://philanthrodata.org/tools/" style="color:inherit;text-decoration:none">PhilanthroData · Free data tools</a><span class="offline"><span class="dot"></span>Offline · files stay on this device</span></div></div>
+<main class="wrap">
+  <header><div><div class="eyebrow">Marketo + Salesforce</div><h1>A clearer view of your duplicates.</h1><p>Review exported leads and contacts across both systems. Separate duplicate candidates, expected sync links, and people who simply work at the same school or company.</p></div><span class="header-tag">Free · runs in your browser</span></header>
+  <div class="intake">
+    <section class="card drop" id="drop" aria-label="Import exports"><span class="step">01 / Add your exports</span><h2>Start with the files you have.</h2><p class="muted">Drop one or more CSV files here, or choose Marketo people and Salesforce Lead / Contact exports. Columns are matched automatically and can be adjusted below.</p><div class="row"><button class="primary" id="choose" type="button">Choose CSV files</button><input type="file" id="file" accept=".csv,.txt,.tsv,text/csv,text/tab-separated-values" multiple hidden><button id="sample" type="button">Load known-answer sample</button></div><div class="hint">CSV, TSV, or semicolon-delimited text · start with 50,000 rows · 150,000 rows / 50 MB total limit</div><div id="status" role="status" aria-live="polite">The fictional sample is loaded below. Adding your files replaces it.</div></section>
+    <aside class="card guide"><span class="step">Built for B2B data</span><h3>Shared context is useful. Identity needs evidence.</h3><ol><li><b>Keep source IDs.</b> Include Marketo ID, Salesforce ID, and Marketo’s linked SFDC person ID when available.</li><li><b>Keep company or school.</b> A shared campus address, email domain, or switchboard alone never creates a duplicate.</li><li><b>Check the date mapping.</b> Activity shows engagement age. Updated At shows record maintenance age.</li></ol><p class="hint">No sign-in, API connection, uploads, or CRM changes. Open this saved HTML file in a modern browser with or without Wi-Fi.</p></aside>
+  </div>
+  <div id="error" class="alert error" role="alert" hidden></div>
+  <div id="files" aria-label="Loaded files and column mapping"></div>
+  <div class="toolbar"><label>Compare<select id="scope"><option value="all">Within + across systems</option><option value="cross">Across Marketo / Salesforce only</option><option value="within">Within each system only</option></select></label><label>Stale after<select id="staleDays"><option value="180">180 days</option><option value="365" selected>365 days</option><option value="730">730 days</option></select></label><div class="run"><button id="clear" class="quiet" type="button">Clear files</button><button id="run" class="primary" type="button">Run duplicate check</button><button id="cancel" type="button" hidden>Cancel</button></div></div>
+  <div id="dirty" class="alert info" role="status" hidden>Settings or files changed. Run the check to refresh the results.</div>
+  <div id="busy" role="status" aria-live="polite" hidden><span id="busy-text">Analyzing locally…</span><div class="load-meter"><span></span></div></div>
+  <div id="results" hidden>
+    <div class="results-head"><div><span class="step">02 / Review the evidence</span><span id="sample-badge" class="pill sample" hidden>Fictional sample</span></div><span class="run-info" id="run-info"></span></div>
+    <div id="warnings"></div>
+    <div class="metrics" id="metrics"></div>
+    <div id="sample-validation" class="validation" hidden></div>
+    <section class="card" id="review-section"><div class="sec-head"><div><h2>People to review</h2><p>Candidate groups use direct match evidence. A group can contain an indirect connection; check the pair evidence export before deciding whether records represent one person.</p></div></div><div class="filters"><div class="filter-buttons" id="tabs" aria-label="Match categories"></div><input type="search" id="search" aria-label="Search findings" placeholder="Search name, email, company, or ID"></div><div class="hint" id="review-note" style="margin-bottom:12px"></div><div id="match-list" class="match-list"></div><div class="page-controls"><span id="page-info" role="status"></span><div class="row"><button id="previous" class="small" type="button">Previous</button><button id="next" class="small" type="button">Next</button></div></div></section>
+    <div class="two-col"><section class="card" id="recency"></section><section class="card" id="quality"></section></div>
+    <section class="card"><div class="sec-head"><div><h2>Compare with a known result</h2><p>Use the same export, date, scope, and definition as your Marketo or Databricks check. Groups and extra rows are different measures; neither is a confirmed merge count.</p></div></div><div class="benchmark"><label>Expected candidate groups<input id="expected-groups" type="number" min="0" step="1" placeholder="e.g. 120"></label><label>Expected additional rows<input id="expected-extra" type="number" min="0" step="1" placeholder="e.g. 145"></label><button id="benchmark" type="button">Compare counts</button></div><div id="benchmark-result" class="benchmark-result" role="status"></div></section>
+    <section class="card" id="export-section"><div class="sec-head"><div><span class="step">03 / Take the findings with you</span><h2 style="margin-top:8px">Export a review file.</h2><p>Generated locally. Original fields are retained in the annotated export. Spreadsheet formula cells are prefixed with an apostrophe for safe opening. No file is a merge or deletion instruction.</p></div></div><div class="exports"><article class="export"><h3>Pair evidence</h3><p>Every candidate, review flag, and expected sync link, with both source IDs, file rows, confidence, and the direct reason.</p><button data-export="pairs" type="button">Download evidence CSV</button><div class="toast" id="toast-pairs" role="status"></div></article><article class="export"><h3>Annotated original rows</h3><p>All input rows and columns, plus source, candidate group, review flags, date basis, and row references. No records are removed.</p><button data-export="rows" type="button">Download annotated CSV</button><div class="toast" id="toast-rows" role="status"></div></article><article class="export"><h3>Stale record review</h3><p>Rows older than your selected threshold. Includes activity versus modified date so a recent sync cannot be mistaken for engagement.</p><button data-export="stale" type="button">Download stale CSV</button><div class="toast" id="toast-stale" role="status"></div></article></div></section>
+  </div>
+  <details class="card method"><summary>Matching rules, limits, and how to validate</summary><div class="content"><div><p><b>Strong candidates.</b> Exact personal email plus exact first and last name. Probable candidates use nickname or similar-name evidence with email, phone, company, or a full street and locality. Email domains, company names, ZIP codes, and shared addresses alone do not match people.</p><p><b>Review flags.</b> Shared inboxes, conflicting names or suffixes, and repeated CRM identities need investigation. Common nickname aliases are heuristic and are never proof of identity. A blank or conflicting name never receives a strong match.</p><p><b>Expected sync links.</b> A Marketo record and Salesforce record with the same valid Salesforce Lead / Contact ID are listed separately. Salesforce 15- and 18-character IDs are normalized with their checksum. Account IDs are company context and never person IDs.</p></div><div><p><b>Recency.</b> Each source row is counted, including linked and candidate records. A populated Last Activity Date takes precedence over Updated At / LastModifiedDate. Blank activity dates fall back to modified dates. Invalid populated activity dates are flagged rather than replaced. Dates accept YYYY-MM-DD with optional time, or US MM/DD/YYYY; future dates are separate. Date-only age uses calendar days.</p><p><b>Coverage and scale.</b> Blocking narrows comparisons using email, person ID, phone, name + company, and name + street / locality. Fuzzy matching needs a common first initial and first three last-name characters within a company, so some typos are missed. Blocks over 250 rows are skipped; runs stop at 1.5 million comparisons or 100,000 evidence pairs. Any such limit is shown as partial coverage. “No candidates” is not proof that a database is clean.</p><p><b>Validation.</b> Start with the included 16-row sample, then a 50,000-row export. Check known duplicate pairs and false positives against your existing identity work. Match counts depend on rules and export coverage. Email syntax is checked locally; deliverability, consent, account relationships, and live CRM status are not verified.</p></div></div></details>
+  <section class="card" style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap"><div><h2>Want a second set of eyes?</h2><p class="muted" style="margin-top:6px">A PhilanthroData volunteer can review the results with your team and help plan a safe merge.</p></div><a href="https://philanthrodata.org/tools/?interest=duplicates#request" class="primary" style="padding:9px 14px;border-radius:7px;text-decoration:none;font-weight:600">Request a walkthrough</a></section>
+  <footer><span>Marketo + Salesforce Duplicate Check · made by PhilanthroData</span><span>Local CSV analysis · review candidates before taking CRM action</span></footer>
+</main>
+<script>
+/* Standalone matching engine. No network, storage, or external dependencies. */
+function createCRMEngine() {
+  'use strict';
+  const clean = v => String(v == null ? '' : v).replace(/\s+/g, ' ').trim();
+  const fold = v => clean(v).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const word = v => fold(v).replace(/[^\p{L}\p{N}]/gu, '');
+  const key = v => fold(v).replace(/[^a-z0-9]/g, '');
+  const fields = [
+    ['id', 'Record / person ID', ['id','recordid','personid','marketoid','leadid','contactid','salesforceid']],
+    ['sfdc', 'Linked Salesforce person ID', ['sfdcid','sfdcleadid','sfdccontactid','salesforceleadid','salesforcecontactid','crmleadid','crmcontactid']],
+    ['first', 'First name', ['firstname','first','givenname']],
+    ['last', 'Last name', ['lastname','last','surname','familyname']],
+    ['full', 'Full name (fallback)', ['name','fullname','personname','contactname','leadname']],
+    ['email', 'Email', ['email','emailaddress','primaryemail']],
+    ['phone', 'Phone', ['phone','phonenumber','businessphone','mobilephone','mobile','telephone']],
+    ['company', 'Company / school / account', ['company','companyname','accountname','account','organization','organisation','school','schoolname','institution','institutionname','employer']],
+    ['account', 'Account / company ID (context)', ['accountid','companyid','sfdcaccountid','salesforceaccountid']],
+    ['street', 'Street address', ['address','address1','addressline1','street','streetaddress','mailingstreet','billingstreet']],
+    ['city', 'City', ['city','mailingcity','billingcity']],
+    ['state', 'State / province', ['state','stateprovince','province','mailingstate','billingstate','statecode']],
+    ['postal', 'Postal code', ['postalcode','zip','zipcode','mailingpostalcode','billingpostalcode']],
+    ['country', 'Country', ['country','countrycode','mailingcountry','billingcountry']],
+    ['activity', 'Last activity date', ['lastactivitydate','lastactivity','lastactivityat','lastengagementdate','lastengagedat','lastinterestingmomentdate']],
+    ['updated', 'Updated / modified date', ['updatedat','updateddate','lastmodifieddate','lastmodified','modifiedat','modifieddate','systemmodstamp']]
+  ];
+  function headerKeys(h) {
+    const all = [key(h)];
+    const short = h.replace(/^(?:lead|contact|person)[. :]+/i, '');
+    all.push(key(short));
+    if (/^account[. :]+name$/i.test(h)) all.push('accountname');
+    return all;
+  }
+  function autoMap(headers) {
+    const map = {}, used = new Set();
+    for (const [f,, aliases] of fields) {
+      let found = -1;
+      for (const alias of aliases) {
+        found = headers.findIndex((h, i) => !used.has(i) && headerKeys(h).includes(alias));
+        if (found >= 0) break;
+      }
+      map[f] = found;
+      if (found >= 0) used.add(found);
+    }
+    return map;
+  }
+  function parseCSV(input) {
+    let text = String(input).replace(/^\uFEFF/, '');
+    if (text.includes('\u0000')) throw new Error('This file contains null bytes. Export UTF-8 CSV or tab-separated text.');
+    let quote = false, counts = {',':0, '\t':0, ';':0};
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (c === '"') { if (quote && text[i+1] === '"') i++; else quote = !quote; }
+      else if (!quote && (c === '\n' || c === '\r')) break;
+      else if (!quote && c in counts) counts[c]++;
+    }
+    const delimiter = Object.keys(counts).sort((a,b) => counts[b]-counts[a])[0];
+    const rows = [], lines = []; let row = [], cell = '', quoted = false, after = false, line = 1, start = 1;
+    function flush() { row.push(cell); if (row.some(x => x.trim())) { rows.push(row); lines.push(start); } row = []; cell = ''; after = false; }
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (quoted) {
+        if (c === '"') { if (text[i+1] === '"') {cell += '"'; i++;} else {quoted = false; after = true;} }
+        else { cell += c; if (c === '\n') line++; }
+      } else if (c === '"') {
+        if (cell || after) throw new Error('Unexpected quote near line '+line+'. Check the CSV export.');
+        quoted = true;
+      } else if (c === delimiter) {row.push(cell); cell = ''; after = false;}
+      else if (c === '\n' || c === '\r') {
+        if (c === '\r' && text[i+1] === '\n') i++;
+        flush(); line++; start = line;
+      } else if (after) { if (!/\s/.test(c)) throw new Error('Unexpected text after a quoted cell near line '+line+'.'); }
+      else cell += c;
+    }
+    if (quoted) throw new Error('Unclosed quoted cell. The file may be truncated.');
+    if (cell || row.length || after) flush();
+    if (rows.length < 2) throw new Error('Include a header row and at least one data row.');
+    const rawHeaders = rows.shift().map(x => x.trim()), warnings = [], seen = new Map(); lines.shift();
+    const headers = rawHeaders.map((h,i) => {
+      if (!h) {warnings.push('Blank column '+(i+1)+' was labeled for mapping.'); h = 'Column '+(i+1);}
+      const n = (seen.get(h)||0)+1; seen.set(h,n);
+      if (n > 1) {warnings.push('Repeated header “'+h+'” was labeled separately.'); return h+' ['+n+']';}
+      return h;
+    });
+    let padded = 0;
+    rows.forEach((r,i) => {
+      if (r.length > headers.length) throw new Error('Line '+lines[i]+' has more cells than the header. Check the delimiter or quotes.');
+      if (r.length < headers.length) {padded++; while(r.length < headers.length) r.push('');}
+    });
+    if (padded) warnings.push(padded+' short rows were padded with blank cells.');
+    return {headers, rows, lines, warnings, delimiter};
+  }
+  function csv(headers, rows) {
+    const escape = value => {
+      let s = String(value == null ? '' : value);
+      if (/^[\s\u0000-\u001f]*[=+@-]/.test(s) || /^[\t\r\n]/.test(s)) s = "'"+s;
+      return /[",\n\r]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+    };
+    return '\uFEFF'+[headers,...rows].map(r => r.map(escape).join(',')).join('\r\n');
+  }
+  const nick = {bob:'robert',rob:'robert',bobby:'robert',bill:'william',will:'william',billy:'william',jim:'james',jimmy:'james',mike:'michael',tom:'thomas',dave:'david',liz:'elizabeth',beth:'elizabeth',betty:'elizabeth',kate:'katherine',katie:'katherine',kathy:'katherine',jen:'jennifer',jenny:'jennifer',dan:'daniel',danny:'daniel',joe:'joseph',rick:'richard',rich:'richard',steve:'steven',matt:'matthew',ben:'benjamin',andy:'andrew',chris:'christopher',tony:'anthony',nick:'nicholas',ed:'edward',charlie:'charles',tim:'timothy'};
+  const suffixRE = /(?:^|\s)(jr\.?|sr\.?|ii|iii|iv)$/i;
+  const emailRE = /^[^\s@]+@[^\s@]+\.[^\s@.]{2,}$/u;
+  const roleRE = /^(info|admin|office|contact|hello|support|sales|billing|accounts|team|admissions|admission|registrar|principal|enquiries|inquiries|webmaster|noreply|no-reply)([._+-].*)?@/i;
+  const publicDomains = new Set(['gmail.com','yahoo.com','hotmail.com','outlook.com','live.com','aol.com','icloud.com','msn.com','proton.me','protonmail.com','comcast.net']);
+  const streetWords = {street:'st',avenue:'ave',road:'rd',drive:'dr',lane:'ln',boulevard:'blvd',court:'ct',suite:'ste',north:'n',south:'s',east:'e',west:'w'};
+  function sfId(v) {
+    const s = clean(v);
+    if (!/^(00Q|003)[a-zA-Z0-9]{12}([a-zA-Z0-9]{3})?$/.test(s)) return '';
+    let tail = '', alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ012345';
+    for (let a=0;a<3;a++) {let bits=0;for(let b=0;b<5;b++) if(/[A-Z]/.test(s[a*5+b])) bits |= 1<<b;tail += alphabet[bits];}
+    if (s.length === 18 && s.slice(15).toUpperCase() !== tail) return '';
+    return s.slice(0,15)+tail;
+  }
+  function phone(v) {
+    const s=clean(v).replace(/(?:ext\.?|extension|x|#)\s*\d+\s*$/i,'').replace(/\D/g,'');
+    const n=s.length===11 && s[0]==='1'?s.slice(1):s;
+    return n.length>=8 && n.length<=15 && !/^(\d)\1+$/.test(n)?n:'';
+  }
+  function date(v) {
+    const s=clean(v); if (!s) return null;
+    let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:$|[T ])/), y, mo, d;
+    if (m) {y=+m[1];mo=+m[2];d=+m[3];}
+    else if ((m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:$|[ T])/))) {y=+m[3];mo=+m[1];d=+m[2];}
+    else return null;
+    const t=new Date(Date.UTC(y,mo-1,d));
+    return y>=1900 && t.getUTCFullYear()===y && t.getUTCMonth()===mo-1 && t.getUTCDate()===d?t.getTime():null;
+  }
+  function similar(a,b) {
+    if (a===b) return 1; if (!a||!b) return 0;
+    const dist=Math.max(0,Math.floor(Math.max(a.length,b.length)/2)-1), am=[],bm=[];let n=0;
+    for(let i=0;i<a.length;i++) for(let j=Math.max(0,i-dist);j<Math.min(b.length,i+dist+1);j++) if(!bm[j] && a[i]===b[j]) {am[i]=bm[j]=true;n++;break;}
+    if(!n)return 0;let swaps=0,k=0,prefix=0;
+    for(let i=0;i<a.length;i++) if(am[i]) {while(!bm[k])k++;if(a[i]!==b[k])swaps++;k++;}
+    const score=(n/a.length+n/b.length+(n-swaps/2)/n)/3;
+    while(prefix<4 && a[prefix] && a[prefix]===b[prefix])prefix++;
+    return score+prefix*.1*(1-score);
+  }
+  function detect(name, headers) {
+    const h=headers.map(key);
+    if (/marketo/i.test(name) || h.some(x => ['sfdcid','sfdctype','marketoid'].includes(x))) return 'Marketo';
+    if (/salesforce|sfdc/i.test(name) || h.some(x => ['lastmodifieddate','isconverted','mailingstreet','systemmodstamp'].includes(x))) return 'Salesforce';
+    return 'Other';
+  }
+  function analyze(files, options={}, progress=()=>{}) {
+    const now=options.now || Date.now(), staleDays=Number(options.staleDays)||365, scope=options.scope||'all';
+    const recs=[], warnings=[], quality={}; let unmappedDateFiles=0;
+    const issue=(r,s) => {r.issues.push(s);quality[s]=(quality[s]||0)+1;};
+    files.forEach((file,fi) => {
+      const M=file.map, get=(row,f)=>M[f]>=0?clean(row[M[f]]):'';
+      if(M.activity<0 && M.updated<0)unmappedDateFiles++;
+      file.rows.forEach((row,ri) => {
+        let first=get(row,'first'),last=get(row,'last');
+        if(!first && !last && get(row,'full')) {const tokens=get(row,'full').split(' ');first=tokens.shift();last=tokens.join(' ');}
+        const suffix=(last.match(suffixRE)||[])[1]||'', f=word(first.split(' ')[0]), l=word(last.replace(suffixRE,''));
+        const email=clean(get(row,'email')).toLowerCase(), valid=emailRE.test(email), company=fold(get(row,'company')).replace(/[.,]/g,'').replace(/\s+/g,' ');
+        const street=fold(get(row,'street')).replace(/[.,#]/g,' ').split(/\s+/).filter(Boolean).map(w=>streetWords[w]||w).join(' ');
+        const postal=word(get(row,'postal')),country=word(get(row,'country'));
+        const activityRaw=get(row,'activity'),updatedRaw=get(row,'updated'),dateRaw=activityRaw||updatedRaw;
+        const dt=date(dateRaw), basis=activityRaw?'activity':updatedRaw?'modified':'none';
+        const id=get(row,'id'), linked=sfId(get(row,'sfdc')) || (file.source==='Salesforce'?sfId(id):'');
+        const r={i:recs.length,fi,ri,line:file.lines?file.lines[ri]:ri+2,id:id||'line '+(ri+2),hasId:!!id,source:file.source,object:file.object||'People',name:clean(first+' '+last),first:f,canon:nick[f]||f,last:l,suffix:word(suffix),email,valid,role:valid&&roleRE.test(email),domain:valid?email.split('@')[1]:'',phone:phone(get(row,'phone')),company,companyRaw:get(row,'company'),account:get(row,'account'),street,postal,country,city:word(get(row,'city')),sf:linked,dt,basis,dateRaw,days:dt===null?null:Math.floor((now-dt)/86400000),issues:[]};
+        if(M.email>=0 && !email) issue(r,'Missing email');
+        else if(email && !valid) issue(r,'Invalid email syntax');
+        if(r.role)issue(r,'Shared / role inbox');
+        if(!f || !l)issue(r,'Incomplete name');
+        if(M.company>=0 && !company)issue(r,'Missing company / school');
+        if(dateRaw && dt===null)issue(r,'Unrecognized date');
+        if(r.days!==null && r.days<0)issue(r,'Future date');
+        if(get(row,'phone') && !r.phone)issue(r,'Unrecognized phone');
+        if(get(row,'sfdc') && !sfId(get(row,'sfdc')))issue(r,'Unrecognized linked Salesforce ID');
+        recs.push(r);
+      });
+    });
+    progress('Building match indexes');
+    const blocks=new Map(), context=new Map();
+    function block(k,i){if(!blocks.has(k))blocks.set(k,[]);blocks.get(k).push(i);}
+    for(const r of recs) {
+      if(r.hasId)block('I|'+r.source+'|'+r.object+'|'+r.id,r.i);
+      if(r.sf)block('S|'+r.sf,r.i);
+      if(r.valid)block('E|'+r.email,r.i);
+      if(r.phone)block('P|'+r.phone,r.i);
+      if(r.canon && r.last) {
+        if(r.company)block('N|'+r.canon+'|'+r.last+'|'+r.company,r.i);
+        if(r.street && (r.postal||r.city))block('A|'+r.canon+'|'+r.last+'|'+r.street+'|'+(r.postal||r.city)+'|'+r.country,r.i);
+        if(r.company && r.last.length>=4)block('F|'+r.canon[0]+'|'+r.last.slice(0,3)+'|'+r.company,r.i);
+      }
+      if(r.company && r.name) {
+        if(!context.has(r.company))context.set(r.company,{rows:0,names:new Set()});
+        const c=context.get(r.company);c.rows++;c.names.add(r.canon+'|'+r.last);
+      }
+    }
+    const pairs=[], examined=new Set();let comparisons=0, cappedBlocks=0, omittedPairs=0, globalLimited=false;
+    const MAX_BLOCK=250, MAX_COMPARES=1500000, MAX_RESULTS=100000;
+    function inScope(a,b) {return scope==='cross'?a.source!==b.source:scope==='within'?a.source===b.source:true;}
+    function assess(a,b) {
+      const sameSF=!!a.sf && a.sf===b.sf, sameEmail=a.valid && b.valid && a.email===b.email;
+      const full=!!a.first && !!b.first && !!a.last && !!b.last;
+      const suffixConflict=(a.suffix||b.suffix) && a.suffix!==b.suffix;
+      const exactName=full && a.first===b.first && a.last===b.last;
+      const canonical=full && a.canon===b.canon && a.last===b.last;
+      // Fuzzy matching may vary only one name component; two merely similar names
+      // at the same organization are too weak to establish person identity.
+      const fuzzy=full && a.first.length>1 && b.first.length>1 && a.last.length>=4 && b.last.length>=4 && a.first[0]===b.first[0] && ((a.canon===b.canon && similar(a.last,b.last)>=.94) || (a.last===b.last && similar(a.canon,b.canon)>=.94));
+      const compatible=canonical||fuzzy, sameCompany=!!a.company && a.company===b.company;
+      const sameAddress=!!a.street && a.street===b.street && !!(a.postal||a.city) && (a.postal||a.city)===(b.postal||b.city) && a.country===b.country;
+      const samePhone=!!a.phone && a.phone===b.phone, sameDomain=!!a.domain && a.domain===b.domain && !publicDomains.has(a.domain);
+      const contradictory=!!a.sf && !!b.sf && a.sf!==b.sf;
+      let kind='',confidence='',reasons=[];
+      if(a.source===b.source && a.object===b.object && a.hasId && b.hasId && a.id===b.id) {
+        kind='review';confidence='Review';reasons=['Repeated source record ID; may be overlapping exports of one record'];
+      } else if(sameSF) {
+        if(a.source!==b.source) {kind='linked';confidence='Linked';reasons=['Same Salesforce person ID; expected cross-system record'];}
+        else {kind='review';confidence='Review';reasons=['Repeated Salesforce identity in the same system / export'];}
+        if(full && !compatible) {kind='review';confidence='Review';reasons=['Same Salesforce ID with conflicting names; validate the ID mapping'];}
+      } else if(sameEmail) {
+        if(suffixConflict) {kind='review';confidence='Review';reasons=['Same email with a name suffix conflict'];}
+        else if(!full || !compatible) {kind='review';confidence='Review';reasons=[full?'Same email with conflicting names':'Same email; incomplete name evidence'];}
+        else if(a.role||b.role) {kind='review';confidence='Review';reasons=['Shared inbox plus compatible name; may be a departmental address'];}
+        else {kind='candidate';confidence=exactName?'Strong':'Probable';reasons=['Exact personal email',exactName?'Exact first and last name':canonical?'Nickname / canonical first name and exact last name':'Similar first and last name'];}
+      } else if(full && compatible && !suffixConflict) {
+        if(samePhone && (sameCompany||sameAddress||canonical)) {kind='candidate';confidence='Probable';reasons=['Same phone','Compatible first and last name'];}
+        else if(sameCompany && (canonical || fuzzy)) {kind='candidate';confidence='Probable';reasons=['Same company / school',canonical?'Same canonical first and last name':'Similar first and last name'];}
+        else if(sameAddress && canonical) {kind='candidate';confidence='Probable';reasons=['Same full name and street / locality'];}
+        if(kind && !canonical && !(samePhone||sameAddress||sameDomain)) {kind='review';confidence='Review';reasons.push('Fuzzy name needs additional evidence');}
+      }
+      if(!kind)return null;
+      if(contradictory)reasons.push('Different Salesforce person IDs');
+      if(sameCompany && !reasons.includes('Same company / school'))reasons.push('Same company / school');
+      return {a:a.i,b:b.i,kind,confidence,reasons};
+    }
+    const rank={I:0,S:1,E:2,P:3,N:4,A:5,F:6};
+    const sorted=[...blocks.entries()].filter(([,v])=>v.length>1).sort((a,b)=>rank[a[0][0]]-rank[b[0][0]]);
+    for(const [k,indices] of sorted) {
+      if(indices.length>MAX_BLOCK) {
+        cappedBlocks++;omittedPairs+=indices.length*(indices.length-1)/2;
+        continue;
+      }
+      for(let x=0;x<indices.length;x++)for(let y=x+1;y<indices.length;y++) {
+        const a=recs[indices[x]],b=recs[indices[y]];
+        if(!inScope(a,b))continue;
+        const pairKey=a.i<b.i?a.i+':'+b.i:b.i+':'+a.i;
+        if(examined.has(pairKey))continue;
+        if(comparisons>=MAX_COMPARES||pairs.length>=MAX_RESULTS) {globalLimited=true;break;}
+        examined.add(pairKey);comparisons++;
+        const p=assess(a,b);if(p)pairs.push(p);
+      }
+      if(globalLimited)break;
+    }
+    if(cappedBlocks)warnings.push(cappedBlocks+' blocks exceeded '+MAX_BLOCK+' rows and were skipped (up to '+omittedPairs.toLocaleString('en-US')+' comparisons before overlap / scope). Other blocks still ran. Results are partial.');
+    if(globalLimited)warnings.push('The run reached the comparison or result limit. Results are partial; split the export into smaller files.');
+    if(unmappedDateFiles)warnings.push(unmappedDateFiles+' file(s) have no mapped date. Those rows appear in “No date”.');
+    progress('Preparing review groups');
+    const parent=recs.map((_,i)=>i), find=i=>{while(parent[i]!==i){parent[i]=parent[parent[i]];i=parent[i];}return i;};
+    for(const p of pairs)if(p.kind==='candidate'){const a=find(p.a),b=find(p.b);if(a!==b)parent[a]=b;}
+    const grouped=new Map();
+    for(const p of pairs)if(p.kind==='candidate') {const root=find(p.a);if(!grouped.has(root))grouped.set(root,{members:new Set(),pairs:[],confidence:'Strong'});const g=grouped.get(root);g.members.add(p.a);g.members.add(p.b);g.pairs.push(p);if(p.confidence!=='Strong')g.confidence='Probable';}
+    const groups=[...grouped.values()].map((g,i)=> {
+      const members=[...g.members], reasons=[...new Set(g.pairs.flatMap(p=>p.reasons))];
+      const completeness=r=>[r.first,r.last,r.valid,r.phone,r.company,r.street,r.postal].filter(Boolean).length;
+      const representative=members.slice().sort((a,b)=>completeness(recs[b])-completeness(recs[a]) || (recs[b].dt||0)-(recs[a].dt||0) || a-b)[0];
+      const id='D'+String(i+1).padStart(4,'0');
+      for(const n of members){recs[n].group=id;recs[n].confidence=g.confidence;recs[n].representative=n===representative;}
+      return {id,members,pairCount:g.pairs.length,confidence:g.confidence,reasons,representative};
+    }).sort((a,b)=>(a.confidence==='Strong'?-1:1)-(b.confidence==='Strong'?-1:1)||b.members.length-a.members.length);
+    const buckets={fresh:0,stale:0,old:0,none:0,invalid:0,future:0};let activityCount=0,modifiedCount=0;
+    for(const r of recs) {
+      if(r.basis==='activity')activityCount++;if(r.basis==='modified')modifiedCount++;
+      r.recency=r.days===null?(r.dateRaw?'invalid':'none'):r.days<0?'future':r.days>staleDays*2?'old':r.days>staleDays?'stale':'fresh';buckets[r.recency]++;
+    }
+    const colleagues=[...context.values()].filter(c=>c.names.size>1).length;
+    return {recs,pairs,groups,buckets,quality,warnings,comparisons,cappedBlocks,globalLimited,partial:!!(cappedBlocks||globalLimited),colleagues,activityCount,modifiedCount,staleDays,scope,now,extra:groups.reduce((s,g)=>s+g.members.length-1,0)};
+  }
+  function sample() {
+    const mkH=['Id','First Name','Last Name','Email Address','Phone Number','Company','Address','City','State','Postal Code','Updated At','SFDC ID'];
+    const sfH=['Id','FirstName','LastName','Email','Phone','Company','Street','City','State','PostalCode','LastActivityDate','LastModifiedDate'];
+    const sfContactH=['Id','FirstName','LastName','Email','Phone','Account.Name','MailingStreet','MailingCity','MailingState','MailingPostalCode','LastActivityDate','LastModifiedDate'];
+    const s1=sfId('00Q000000000001'),s2=sfId('003000000000002');
+    const m=[
+      ['101','Aisha','Patel','aisha@northbridge.example','6175550101','Northbridge School','12 Campus Road','Boston','MA','02130','2026-09-03',s1],
+      ['102','Robert','Chen','rchen@river.example','6175550102','River Academy','40 Oak St','Boston','MA','02130','2024-02-05',''],
+      ['103','Bob','Chen','rchen@river.example','6175550102','River Academy','40 Oak Street','Boston','MA','02130','2026-08-01',''],
+      ['104','Elena','Garcia','egarcia@river.example','6175550199','River Academy','40 Oak Street','Boston','MA','02130','2023-04-03',''],
+      ['105','Wei','Zhang','wzhang@river.example','6175550199','River Academy','40 Oak Street','Boston','MA','02130','2026-09-02',''],
+      ['106','Priya','Shah','priya@westhaven.example','6175550106','Westhaven College','8 Main St','Quincy','MA','02169','2024-03-01',''],
+      ['107','Omar','Ali','info@oak.example','6175550198','Oak School','10 Main St','Boston','MA','02130','2025-09-01',''],
+      ['108','Sam','Reed','info@oak.example','6175550198','Oak School','10 Main St','Boston','MA','02130','',''],
+      ['109','Henry','Lee Sr.','lee@elm.example','6175550109','Elm School','20 Elm St','Boston','MA','02130','2026-05-01',''],
+      ['110','Henry','Lee Jr.','lee@elm.example','6175550110','Elm School','20 Elm St','Boston','MA','02130','2026-05-02',''],
+      ['111','Maya','Jones','maya@cedar.example','6175550111','Cedar Institute','3 Cedar Rd','Boston','MA','02130','2026-08-01',s2]
+    ];
+    const s=[
+      [s1,'Aisha','Patel','aisha@northbridge.example','6175550101','Northbridge School','12 Campus Rd','Boston','MA','02130','2026-09-01','2026-09-03'],
+      [sfId('00Q000000000003'),'Priya','Shah','pshah@westhaven.example','6175550106','Westhaven College','8 Main Street','Quincy','MA','02169','2023-04-01','2026-08-01'],
+      [sfId('00Q000000000004'),'Sara','Lopez','sara@pine.example','6175550112','Pine School','70 Pine Rd','Boston','MA','02130','2026-09-01','2026-09-01']
+    ];
+    const c=[
+      [s2,'Maya','Jones','maya@cedar.example','6175550111','Cedar Institute','3 Cedar Rd','Boston','MA','02130','2026-08-01','2026-08-01'],
+      [sfId('003000000000005'),'Sara','Lopez','sara@pine.example','6175550112','Pine School','70 Pine Rd','Boston','MA','02130','2026-09-01','2026-09-02']
+    ];
+    return [{name:'sample-marketo.csv',source:'Marketo',object:'People',...parseCSV(csv(mkH,m))},{name:'sample-salesforce-leads.csv',source:'Salesforce',object:'Leads',...parseCSV(csv(sfH,s))},{name:'sample-salesforce-contacts.csv',source:'Salesforce',object:'Contacts',...parseCSV(csv(sfContactH,c))}].map((f,i)=>({...f,uid:i+1,map:autoMap(f.headers),sample:true}));
+  }
+  return {fields,autoMap,parseCSV,csv,sfId,date,phone,detect,analyze,sample};
+}
+if (typeof module !== 'undefined' && module.exports) module.exports = createCRMEngine;
+
+</script>
+<script>
+(() => {
+  'use strict';
+  const E=createCRMEngine(), $=id=>document.getElementById(id), n=x=>Number(x).toLocaleString('en-US');
+  const esc=x=>String(x==null?'':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const label={all:'All candidates',Strong:'Strong',Probable:'Probable',review:'Review flags',linked:'Sync links'};
+  let files=[], result=null, worker=null, uid=100, currentTab='all', page=0, running=false, lastMs=0;
+  const PAGE_SIZE=8,MAX_ROWS=150000,MAX_BYTES=50*1024*1024;
+  function error(message){$('error').textContent=message;$('error').hidden=!message;}
+  function setBusy(b,text='Analyzing locally…') {
+    running=b;$('busy').hidden=!b;$('busy-text').textContent=text;$('cancel').hidden=!b;
+    for(const id of ['choose','sample','file','clear','scope','staleDays'])$(id).disabled=b;
+    $('run').disabled=b||!files.length;
+    $('files').querySelectorAll('select,button').forEach(el=>el.disabled=b);
+  }
+  function dirty(){
+    result=null;$('results').hidden=true;$('dirty').hidden=!files.length;$('run').disabled=!files.length;
+    $('benchmark-result').textContent='';
+  }
+  function fileInfo(){
+    const total=files.reduce((s,f)=>s+f.rows.length,0);
+    $('status').textContent=files.length?n(files.length)+' files · '+n(total)+' rows loaded'+(files.every(f=>f.sample)?' · fictional sample':' · read on this device only'):'No files loaded. Choose an export or load the sample.';
+  }
+  function renderFiles(){
+    $('files').innerHTML=files.map(f=> {
+      const matched=E.fields.filter(([k])=>f.map[k]>=0).length;
+      return '<article class="file-card" data-file="'+f.uid+'"><div class="file-top"><span class="pill '+f.source.toLowerCase()+'">'+esc(f.source)+'</span><span class="file-name">'+esc(f.name)+'</span><span class="hint">'+n(f.rows.length)+' rows</span><div class="file-controls"><label for="source-'+f.uid+'">System</label><select id="source-'+f.uid+'" data-source="'+f.uid+'" aria-label="Source system for '+esc(f.name)+'">'+['Marketo','Salesforce','Other'].map(s=>'<option'+(f.source===s?' selected':'')+'>'+s+'</option>').join('')+'</select><select data-object="'+f.uid+'" aria-label="Record type for '+esc(f.name)+'">'+['People','Leads','Contacts','Mixed'].map(s=>'<option'+(f.object===s?' selected':'')+'>'+s+'</option>').join('')+'</select><button class="small remove" data-remove="'+f.uid+'" aria-label="Remove '+esc(f.name)+'" type="button">Remove</button></div></div><details'+(f.map.email<0&&f.map.last<0?' open':'')+'><summary>Column matching · '+matched+' / '+E.fields.length+' fields mapped · review or adjust</summary><div class="map-grid">'+E.fields.map(([k,t])=>'<label>'+esc(t)+'<select data-map="'+f.uid+':'+k+'" aria-label="'+esc(t)+' for '+esc(f.name)+'"><option value="-1">— not mapped —</option>'+f.headers.map((h,i)=>'<option value="'+i+'"'+(f.map[k]===i?' selected':'')+'>'+esc(h)+'</option>').join('')+'</select></label>').join('')+'</div></details>'+(f.warnings.length?'<div class="file-note">'+f.warnings.map(esc).join(' ')+'</div>':'')+'</article>';
+    }).join('');
+    $('files').querySelectorAll('[data-source]').forEach(el=>el.onchange=()=>{files.find(f=>f.uid===+el.dataset.source).source=el.value;dirty();renderFiles();});
+    $('files').querySelectorAll('[data-object]').forEach(el=>el.onchange=()=>{files.find(f=>f.uid===+el.dataset.object).object=el.value;dirty();});
+    $('files').querySelectorAll('[data-remove]').forEach(el=>el.onclick=()=>{files=files.filter(f=>f.uid!==+el.dataset.remove);dirty();renderFiles();});
+    $('files').querySelectorAll('[data-map]').forEach(el=>el.onchange=()=>{
+      const [id,k]=el.dataset.map.split(':'),f=files.find(f=>f.uid===+id),newIndex=+el.value;
+      for(const [field] of E.fields)if(field!==k&&newIndex>=0&&f.map[field]===newIndex){f.map[field]=-1;const other=$('files').querySelector('[data-map="'+id+':'+field+'"]');if(other)other.value='-1';}
+      f.map[k]=newIndex;dirty();
+      const details=el.closest('details');details.querySelector('summary').textContent='Column matching · '+E.fields.filter(([field])=>f.map[field]>=0).length+' / '+E.fields.length+' fields mapped · adjusted';
+    });
+    fileInfo();$('run').disabled=running||!files.length;
+  }
+  async function importFiles(list){
+    if(running)return;error('');
+    const chosen=[...list];if(!chosen.length)return;
+    const original=files.every(f=>f.sample)?[]:files.slice();
+    const previousBytes=original.reduce((s,f)=>s+(f.bytes||0),0);
+    if(previousBytes+chosen.reduce((s,f)=>s+f.size,0)>MAX_BYTES){error('The combined files exceed 50 MB. Export fewer rows or fewer columns, then try again.');return;}
+    if(original.length+chosen.length>20){error('Load no more than 20 files in one run.');return;}
+    setBusy(true,'Reading and mapping your exports…');
+    try {
+      const added=[];
+      for(const file of chosen) {
+        if(!/\.(csv|txt|tsv)$/i.test(file.name))throw new Error(file.name+': export a CSV, TXT, or TSV file first.');
+        const buffer=await file.arrayBuffer(),bytes=new Uint8Array(buffer);
+        const encoding=bytes[0]===0xff&&bytes[1]===0xfe?'utf-16le':bytes[0]===0xfe&&bytes[1]===0xff?'utf-16be':'utf-8';
+        const parsed=E.parseCSV(new TextDecoder(encoding,{fatal:true}).decode(buffer));
+        const source=E.detect(file.name,parsed.headers);
+        added.push({...parsed,uid:++uid,name:file.name,bytes:file.size,source,object:/contact/i.test(file.name)?'Contacts':/lead/i.test(file.name)?'Leads':'People',map:E.autoMap(parsed.headers),sample:false});
+      }
+      const next=original.concat(added),total=next.reduce((s,f)=>s+f.rows.length,0);
+      if(total>MAX_ROWS)throw new Error('These files contain '+n(total)+' rows, above the '+n(MAX_ROWS)+'-row limit. Start with a smaller export.');
+      files=next;dirty();renderFiles();$('status').textContent+=' · review the mapping, then run the check';
+    } catch(e){error(e.message||String(e));}
+    finally{setBusy(false);$('file').value='';}
+  }
+  function run(){
+    if(running||!files.length)return;error('');
+    for(const f of files) {
+      if(f.map.email<0 && f.map.sfdc<0 && f.map.phone<0 && f.map.last<0 && f.map.full<0){error('Map an email, linked Salesforce ID, phone, or name in '+f.name+' before running.');return;}
+      if(f.source==='Salesforce' && f.map.id>=0 && /account[ ._]*id/i.test(f.headers[f.map.id])){error('The Record ID mapping in '+f.name+' points to an Account ID. Map a Lead / Contact ID instead.');return;}
+    }
+    result=null;$('results').hidden=true;$('dirty').hidden=true;setBusy(true);
+    const start=performance.now(), now=new Date();
+    const midnight=Date.UTC(now.getFullYear(),now.getMonth(),now.getDate());
+    const code='const E=('+createCRMEngine.toString()+')();self.onmessage=e=>{try{const result=E.analyze(e.data.files,e.data.options,text=>self.postMessage({type:"progress",text}));self.postMessage({type:"result",result});}catch(error){self.postMessage({type:"error",message:error.message});}};';
+    let url;
+    try {
+      url=URL.createObjectURL(new Blob([code],{type:'text/javascript'}));worker=new Worker(url);URL.revokeObjectURL(url);
+      worker.onmessage=event=>{
+        const data=event.data;
+        if(data.type==='progress'){$('busy-text').textContent=data.text+'…';return;}
+        worker.terminate();worker=null;setBusy(false);
+        if(data.type==='error'){error(data.message);$('dirty').hidden=false;return;}
+        lastMs=Math.round(performance.now()-start);result=data.result;currentTab='all';page=0;$('search').value='';renderResults();
+      };
+      worker.onerror=event=>{if(worker)worker.terminate();worker=null;setBusy(false);error('The browser could not complete the local analysis. Try a smaller file in a current Chrome, Edge, Firefox, or Safari browser. '+(event.message||''));$('dirty').hidden=false;};
+      worker.postMessage({files,options:{scope:$('scope').value,staleDays:+$('staleDays').value,now:midnight}});
+    }catch(e){if(url)URL.revokeObjectURL(url);if(worker)worker.terminate();worker=null;setBusy(false);error('This browser blocked local background processing. Open the saved HTML file directly in a current browser. '+e.message);$('dirty').hidden=false;}
+  }
+  function metric(value,title,sub,feature=false){return '<article class="metric'+(feature?' featured':'')+'"><div class="eyebrow">'+title+'</div><div class="v num">'+n(value)+'</div><div class="l">'+sub+'</div></article>';}
+  function renderResults(){
+    const A=result, reviews=A.pairs.filter(p=>p.kind==='review'),links=A.pairs.filter(p=>p.kind==='linked');
+    $('results').hidden=false;$('sample-badge').hidden=!files.every(f=>f.sample);
+    $('run-info').textContent=n(A.recs.length)+' source rows · '+n(A.comparisons)+' comparisons · '+(lastMs/1000).toFixed(2)+'s · '+(A.partial?'partial coverage':'blocking complete');
+    $('warnings').innerHTML=A.warnings.map(w=>'<div class="alert" style="margin-bottom:8px">'+esc(w)+'</div>').join('');
+    $('metrics').innerHTML=metric(A.groups.length,'Candidate groups',n(A.extra)+' additional rows in groups · review required',true)+metric(A.groups.reduce((s,g)=>s+g.members.length,0),'Rows in candidates','of '+n(A.recs.length)+' source rows checked')+metric(reviews.length,'Review flags','pairs with ambiguous or conflicting evidence')+metric(links.length,'Expected sync links','pairs sharing a Salesforce person ID');
+    $('sample-validation').hidden=!files.every(f=>f.sample);
+    if(files.every(f=>f.sample)){
+      const expected=A.scope==='all'?[3,3,2,2]:A.scope==='cross'?[1,1,0,2]:[2,2,2,0];
+      const actual=[A.groups.length,A.extra,reviews.length,links.length],pass=expected.every((x,i)=>x===actual[i]);
+      $('sample-validation').classList.toggle('bad',!pass);
+      $('sample-validation').innerHTML='<span><b>'+(pass?'Known-answer sample passed':'Sample result differs from the reference')+'</b> · expected '+expected[0]+' candidate groups, '+expected[1]+' additional rows, '+expected[2]+' review pairs, '+expected[3]+' sync links.</span><span>Elena + Wei share a campus and switchboard; kept separate.</span>';
+    }
+    renderTabs();renderMatches();renderRecency();renderQuality();$('benchmark-result').textContent='';
+    for(const k of ['pairs','rows','stale'])$('toast-'+k).textContent='';
+  }
+  function renderTabs(){
+    const counts={all:result.groups.length,Strong:result.groups.filter(g=>g.confidence==='Strong').length,Probable:result.groups.filter(g=>g.confidence==='Probable').length,review:result.pairs.filter(p=>p.kind==='review').length,linked:result.pairs.filter(p=>p.kind==='linked').length};
+    $('tabs').innerHTML=Object.keys(label).map(k=>'<button type="button" data-tab="'+k+'" aria-pressed="'+(currentTab===k)+'">'+label[k]+' <span class="num">'+n(counts[k])+'</span></button>').join('');
+    $('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{currentTab=b.dataset.tab;page=0;renderTabs();renderMatches();});
+  }
+  function recordTable(indices){
+    const shown=indices.slice(0,25);
+    return '<div class="table-wrap"><table><thead><tr><th>Source / record ID</th><th>Person</th><th>Email</th><th>Company / school</th><th>Phone</th><th>Date / basis</th></tr></thead><tbody>'+shown.map(i=>{
+      const r=result.recs[i],f=files[r.fi];
+      return '<tr><td><span class="pill '+r.source.toLowerCase()+'">'+esc(r.source)+'</span><div class="mono" style="margin-top:5px">'+esc(r.id)+'</div><div class="subline">'+esc(r.object)+' · '+esc(f.name)+' · line '+r.line+'</div></td><td><b>'+esc(r.name||'(no name)')+'</b>'+(r.representative?'<div class="subline">Most complete candidate row</div>':'')+'</td><td class="mono">'+esc(r.email||'—')+'</td><td>'+esc(r.companyRaw||'—')+(r.sf?'<div class="subline mono">SF: '+esc(r.sf)+'</div>':'')+'</td><td class="mono">'+esc(r.phone||'—')+'</td><td class="nowrap">'+esc(r.dateRaw||'—')+'<div class="subline">'+(r.basis==='activity'?'Last activity':r.basis==='modified'?'Modified / updated':'No date')+(r.days!==null?' · '+n(r.days)+' days':'')+'</div></td></tr>';
+    }).join('')+'</tbody></table></div>'+(indices.length>25?'<div class="hint" style="padding:9px 14px">Showing 25 of '+n(indices.length)+' rows. All evidence and rows are available in the exports.</div>':'');
+  }
+  function renderMatches(){
+    if(!result)return;
+    let items=['review','linked'].includes(currentTab)?result.pairs.filter(p=>p.kind===currentTab).map((p,i)=>({id:(p.kind==='review'?'R':'L')+String(i+1).padStart(4,'0'),members:[p.a,p.b],confidence:p.confidence,reasons:p.reasons,pairCount:1})):result.groups.filter(g=>currentTab==='all'||g.confidence===currentTab);
+    const search=$('search').value.trim().toLowerCase();
+    if(search)items=items.filter(g=>g.members.some(i=>{const r=result.recs[i];return [r.name,r.email,r.companyRaw,r.id,r.sf,r.source].join(' ').toLowerCase().includes(search);}));
+    const pages=Math.max(1,Math.ceil(items.length/PAGE_SIZE));page=Math.min(page,pages-1);
+    const visible=items.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE);
+    $('review-note').textContent=currentTab==='linked'?'These pairs share a Salesforce person ID and are excluded from candidate groups. They normally represent one synced identity.':currentTab==='review'?'These pairs are excluded from candidate groups. Investigate the conflict or shared identifier before classifying them.':'Strong and probable are heuristic confidence labels. The “most complete” row is a reference for review, not an instruction to keep or merge it.';
+    $('match-list').innerHTML=visible.length?visible.map(g=>'<article class="match"><div class="match-head"><div><div class="row"><span class="pill '+g.confidence.toLowerCase()+'">'+esc(g.confidence)+'</span><b>'+esc(g.id)+'</b><span class="hint">'+n(g.members.length)+' rows · '+n(g.pairCount)+' direct evidence pairs</span></div><div class="reason">'+g.reasons.map(esc).join(' · ')+'</div></div></div>'+recordTable(g.members)+'</article>').join(''):'<div class="empty">'+(search?'No findings match this search.':'No '+(currentTab==='linked'?'expected sync links':currentTab==='review'?'review flags':'candidate groups')+' found for this category. Blocking rules may miss duplicates with different identifiers or insufficient fields.')+'</div>';
+    $('page-info').textContent=items.length?n(page*PAGE_SIZE+1)+'–'+n(Math.min((page+1)*PAGE_SIZE,items.length))+' of '+n(items.length)+(currentTab==='linked'||currentTab==='review'?' pairs':' groups'):'0 findings';
+    $('previous').disabled=page===0;$('next').disabled=page>=pages-1;
+  }
+  function renderRecency(){
+    const A=result,B=A.buckets,days=A.staleDays;
+    const segments=[['fresh','Within '+n(days)+' days','#41876b'],['stale',n(days+1)+'–'+n(days*2)+' days','#d9ad53'],['old','Over '+n(days*2)+' days','#b87569'],['none','No date','#c9d3e1'],['invalid','Invalid date','#9d6f99'],['future','Future date','#8b9dcd']];
+    $('recency').innerHTML='<div class="sec-head"><div><h2>How stale are the records?</h2><p>All '+n(A.recs.length)+' source rows, including sync links and candidate copies. Stale means older than '+n(days)+' days.</p></div></div><div class="stack" role="img" aria-label="Record recency breakdown">'+segments.filter(([k])=>B[k]).map(([k,t,c])=>'<div style="flex:'+B[k]+';background:'+c+'" title="'+t+': '+n(B[k])+'"></div>').join('')+'</div><div class="legend">'+segments.map(([k,t,c])=>'<div><span class="swatch" style="background:'+c+'"></span><span><b class="num">'+n(B[k])+'</b> <span class="muted">'+(B[k]/A.recs.length*100).toFixed(1)+'%</span><br><span class="muted">'+t+'</span></span></div>').join('')+'</div><p class="date-warning">'+n(A.activityCount)+' rows use activity dates. '+n(A.modifiedCount)+' use modified / updated dates; these measure maintenance age, not engagement. As of '+new Date(A.now).toISOString().slice(0,10)+'.</p>';
+  }
+  function renderQuality(){
+    const A=result,items=Object.entries(A.quality).sort((a,b)=>b[1]-a[1]);
+    $('quality').innerHTML='<div class="sec-head"><div><h2>Context + data quality</h2><p>'+n(A.colleagues)+' companies / schools contain distinct normalized names. Shared company context alone creates no duplicate candidate.</p></div></div>'+(items.length?items.map(([t,c])=>'<div class="quality-item"><span>'+esc(t)+'</span><b class="num">'+n(c)+'</b></div>').join(''):'<div class="empty">No issues found in the mapped fields.</div>')+'<p class="hint" style="margin-top:13px">Counts are source rows and can overlap. Email validity means syntax only. No deliverability check is performed.</p>';
+  }
+  function download(name,contents){
+    const url=URL.createObjectURL(new Blob([contents],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
+  }
+  function buildExport(kind){
+    const A=result,date=new Date(A.now).toISOString().slice(0,10);
+    const common=['source_system','record_type','record_id','linked_salesforce_person_id','source_file','source_line','name','email','company','phone','date_value','date_basis','days_since_date'];
+    const values=r=>[r.source,r.object,r.hasId?r.id:'',r.sf,files[r.fi].name,r.line,r.name,r.email,r.companyRaw,r.phone,r.dateRaw,r.basis,r.days];
+    let headers,rows;
+    if(kind==='pairs') {
+      headers=['evidence_pair','category','confidence','reason','candidate_group_a','candidate_group_b','analysis_scope','coverage',...common.map(h=>'a_'+h),...common.map(h=>'b_'+h)];
+      rows=A.pairs.map((p,i)=>['P'+String(i+1).padStart(6,'0'),p.kind,p.confidence,p.reasons.join('; '),A.recs[p.a].group||'',A.recs[p.b].group||'',A.scope,A.partial?'partial':'blocking complete',...values(A.recs[p.a]),...values(A.recs[p.b])]);
+    }else if(kind==='stale'){
+      headers=[...common,'candidate_group','recency_bucket','stale_threshold_days','coverage'];
+      rows=A.recs.filter(r=>r.recency==='stale'||r.recency==='old').map(r=>[...values(r),r.group||'',r.recency,A.staleDays,A.partial?'partial':'blocking complete']);
+    }else {
+      const originalHeaders=[...new Set(files.flatMap(f=>f.headers))],originalMap=new Map(originalHeaders.map((h,i)=>[h,i]));
+      const pairRefs=new Map();A.pairs.forEach((p,i)=>{for(const index of [p.a,p.b]){if(!pairRefs.has(index))pairRefs.set(index,[]);pairRefs.get(index).push('P'+String(i+1).padStart(6,'0'));}});
+      headers=[...common,'candidate_group','group_confidence','reference_row_only','evidence_pairs','quality_flags','recency_bucket','coverage',...originalHeaders.map(h=>'input: '+h)];
+      rows=A.recs.map(r=>{const original=Array(originalHeaders.length).fill(''),f=files[r.fi];f.headers.forEach((h,i)=>original[originalMap.get(h)]=f.rows[r.ri][i]);return [...values(r),r.group||'',r.confidence||'',r.representative?'yes':'',(pairRefs.get(r.i)||[]).join('; '),r.issues.join('; '),r.recency,A.partial?'partial':'blocking complete',...original];});
+    }
+    return {name:'crm-duplicate-check-'+kind+'-'+date+'.csv',contents:E.csv(headers,rows),count:rows.length};
+  }
+  $('choose').onclick=()=>$('file').click();$('file').onchange=e=>importFiles(e.target.files);
+  $('sample').onclick=()=>{error('');files=E.sample().map(f=>({...f,uid:++uid}));dirty();renderFiles();run();};
+  $('run').onclick=run;$('scope').onchange=dirty;$('staleDays').onchange=dirty;
+  $('clear').onclick=()=>{error('');files=[];dirty();renderFiles();$('file').value='';};
+  $('cancel').onclick=()=>{if(worker)worker.terminate();worker=null;setBusy(false);dirty();$('status').textContent='Analysis canceled. Your files are still loaded.';};
+  $('search').oninput=()=>{page=0;renderMatches();};$('previous').onclick=()=>{page--;renderMatches();};$('next').onclick=()=>{page++;renderMatches();};
+  $('benchmark').onclick=()=>{
+    if(!result)return;
+    const g=$('expected-groups').value,e=$('expected-extra').value,out=[];
+    if(!g&&!e){$('benchmark-result').textContent='Enter a reference count to compare.';return;}
+    for(const [value,actual,title] of [[g,result.groups.length,'Candidate groups'],[e,result.extra,'Additional rows']]){
+      if(value==='')continue;const expected=Number(value);
+      if(!Number.isSafeInteger(expected)||expected<0){$('benchmark-result').textContent='Use non-negative whole numbers.';return;}
+      const diff=actual-expected;out.push(title+': '+n(actual)+' found vs '+n(expected)+' expected (difference '+(diff>0?'+':'')+n(diff)+').');
+    }
+    $('benchmark-result').textContent=out.join(' ')+(result.partial?' This run has partial coverage.':'')+' Count agreement alone does not validate individual matches.';
+  };
+  document.querySelectorAll('[data-export]').forEach(b=>b.onclick=()=>{
+    if(!result)return;const kind=b.dataset.export;
+    try{const output=buildExport(kind);download(output.name,output.contents);$('toast-'+kind).textContent='Download started · '+n(output.count)+' rows.';}
+    catch(e){$('toast-'+kind).textContent='Could not create download: '+e.message;}
+  });
+  ['dragenter','dragover'].forEach(t=>$('drop').addEventListener(t,e=>{e.preventDefault();$('drop').classList.add('over');}));
+  ['dragleave','drop'].forEach(t=>$('drop').addEventListener(t,e=>{e.preventDefault();$('drop').classList.remove('over');}));
+  $('drop').addEventListener('drop',e=>importFiles(e.dataTransfer.files));
+  window.addEventListener('dragover',e=>e.preventDefault());window.addEventListener('drop',e=>e.preventDefault());
+  files=E.sample().map(f=>({...f,uid:++uid}));renderFiles();run();
+})();
+
+</script>
+</body>
+</html>

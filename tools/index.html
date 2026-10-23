@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Data Tools | PhilanthroData</title>
+<meta name="description" content="Free tools that check your nonprofit's donor and contact data in your browser. Your file is never uploaded.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap">
+<style>
+/* Matches philanthrodata.org: cream ground, navy ink, serif display, mono labels. If the site has its own stylesheet, swap these tokens for its variables. */
+:root{
+  --cream:#f6f3ec; --paper:#ffffff; --sand:#efeae0; --line:#e2ddd2;
+  --navy:#1d2f4f; --navy-2:#2c4370; --ink:#1c2d4a; --muted:#5b6475;
+  --green:#3d7a55; --green-soft:#e6f0e8; --gold:#b9893a; --red:#a63838;
+  --f-display:"Source Serif 4","Iowan Old Style",Georgia,serif;
+  --f-body:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.6 var(--f-body)}
+a{color:var(--navy)}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;color:var(--navy);margin:0;text-wrap:balance}
+h1{font-size:clamp(34px,5vw,52px);line-height:1.1;letter-spacing:-.01em}
+h2{font-size:clamp(28px,3.6vw,38px);line-height:1.15}
+h3{font-size:21px;line-height:1.25}
+p{margin:0}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.eyebrow{font:500 12.5px/1.4 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:#4f5b54}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:6px;padding:12px 20px;font:600 15px/1.2 var(--f-body);text-decoration:none;border:1.5px solid var(--navy);cursor:pointer}
+.btn.solid{background:var(--navy);color:#fff}
+.btn.solid:hover{background:var(--navy-2);border-color:var(--navy-2)}
+.btn.line{background:transparent;color:var(--navy)}
+.btn.line:hover{background:#fff}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid #8fa7d1;outline-offset:2px}
+/* nav */
+.nav{position:sticky;top:0;z-index:10;background:var(--cream);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:18px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font:600 21px/1 var(--f-display);color:var(--navy)}
+.logo .mark{width:30px;height:30px;border-radius:50%;border:2.5px solid var(--navy);display:grid;place-items:center;flex:none}
+.logo .mark i{display:block;width:12px;height:12px;background:linear-gradient(to top,var(--green) 0 60%,transparent 60%),linear-gradient(to top,var(--green) 0 85%,transparent 85%);background-size:4px 100%,4px 100%;background-position:2px 0,7px 0;background-repeat:no-repeat}
+.links{display:flex;align-items:center;gap:28px;font-size:15px}
+.links a{text-decoration:none;color:var(--ink)}
+.links a:hover{text-decoration:underline;text-underline-offset:4px}
+.links a[aria-current]{font-weight:600;color:var(--navy)}
+.links .btn{color:#fff}
+@media (max-width:880px){.links a:not(.btn):not([aria-current]){display:none}.links{gap:16px}}
+@media (max-width:480px){.links a[aria-current]{display:none}.links .btn{padding:10px 14px;font-size:14px}}
+/* hero */
+.hero{padding-block:72px 80px}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+@media (max-width:880px){.hero .wrap{grid-template-columns:1fr;gap:40px}.hero{padding-block:48px 56px}}
+.hero-copy{display:flex;flex-direction:column;gap:22px}
+.hero-copy p.lead{font-size:18.5px;color:#3e4a5e;max-width:56ch}
+.ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:26px 26px 22px;box-shadow:0 18px 40px -24px rgb(29 47 79 / .35);font-family:var(--f-mono);font-size:13px;min-width:0}
+.panel .tag{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#4f5b54;margin-bottom:14px}
+.panel .tag::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green)}
+.panel .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-bottom:1px solid #eeeae2;color:#4c5566}
+.panel .row b{font-weight:500;color:var(--navy);font-variant-numeric:tabular-nums;white-space:nowrap}
+.panel .chip{font-size:11px;padding:2px 8px;border-radius:999px;background:#f4eee2;color:#9a7b45}
+.panel .down{text-align:center;color:var(--gold);padding:12px 0 6px;font-family:var(--f-body)}
+.panel .act{border-left:3px solid var(--green);background:#f7f5f0;border-radius:6px;padding:11px 14px;font-family:var(--f-body);font-size:14px;color:var(--ink);margin-top:8px;display:flex;gap:10px}
+.panel .act span{font-family:var(--f-mono);font-size:12px;color:#6a7280;padding-top:2px}
+.panel .note{margin-top:14px;font-size:11.5px;color:#7a8190}
+/* sections */
+section{padding-block:80px}
+.sec-head{display:flex;flex-direction:column;gap:12px;max-width:720px;margin-bottom:40px}
+.sec-head p{color:#47536a;font-size:17px}
+.tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+@media (max-width:960px){.tools{grid-template-columns:1fr}}
+.tool{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:26px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.tool .for{font:500 12px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--green)}
+.tool p{color:#47536a;font-size:15px}
+.tool dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:14px;border-top:1px solid #eeeae2;padding-top:14px}
+.tool dt{font:500 11.5px/1.7 var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:#7a8190}
+.tool dd{margin:0;color:var(--ink)}
+.tool .go{margin-top:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding-top:6px}
+.tool .go .btn{padding:10px 16px;font-size:14.5px}
+.tool .dl{font-size:13.5px;color:var(--muted)}
+.tool.niche{background:transparent}
+/* privacy band */
+.band{background:var(--navy);color:#dfe5ef}
+.band h2{color:#fff}
+.band .sec-head p{color:#c3cddd}
+.band .eyebrow{color:#9fb0c9}
+.promises{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+@media (max-width:820px){.promises{grid-template-columns:1fr}}
+.promise{border-top:1px solid #3a5079;padding-top:18px;display:flex;flex-direction:column;gap:8px}
+.promise h3{color:#fff;font-size:19px}
+.promise p{color:#c3cddd;font-size:15px}
+.band blockquote{margin:44px 0 0;font:italic 500 clamp(21px,2.6vw,27px)/1.4 var(--f-display);color:#fff;max-width:36ch}
+/* request */
+.req{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
+@media (max-width:880px){.req{grid-template-columns:1fr;gap:36px}}
+.req-copy{display:flex;flex-direction:column;gap:18px}
+.req-copy p{color:#47536a;font-size:17px}
+.steps{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:14px;counter-reset:s}
+.steps li{display:grid;grid-template-columns:34px 1fr;gap:10px;font-size:15.5px;counter-increment:s}
+.steps li::before{content:"0" counter(s);font:500 13px/1.9 var(--f-mono);color:#7a8190}
+.steps b{color:var(--navy)}
+.req-copy .mail{font-size:15px;color:var(--muted)}
+form{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:30px;display:grid;grid-template-columns:1fr 1fr;gap:18px 18px;min-width:0}
+@media (max-width:560px){form{grid-template-columns:1fr;padding:22px}}
+.f{display:flex;flex-direction:column;gap:6px;min-width:0}
+.f.full{grid-column:1/-1}
+label,.legend{font-size:14px;font-weight:600;color:var(--ink)}
+.opt{font-weight:400;color:var(--muted)}
+input[type=text],input[type=email],input[type=url],select,textarea{font:inherit;font-size:15px;color:var(--ink);background:#fbfaf7;border:1px solid #d8d2c5;border-radius:7px;padding:10px 12px;width:100%;min-width:0}
+textarea{min-height:110px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--navy);background:#fff}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;margin-top:8px}
+@media (max-width:560px){.checks{grid-template-columns:1fr}}
+.checks label{display:flex;gap:9px;align-items:flex-start;font-weight:400;font-size:14.5px;line-height:1.4}
+.checks input{margin-top:2px;width:16px;height:16px;accent-color:var(--navy);flex:none}
+.hp{position:absolute;left:-5000px;width:1px;height:1px;overflow:hidden}
+.submit{grid-column:1/-1;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.fine{font-size:13px;color:var(--muted);max-width:44ch}
+.msg{grid-column:1/-1;border-radius:8px;padding:14px 16px;font-size:15px}
+.msg.ok{background:var(--green-soft);color:#24553a}
+.msg.err{background:#fbecec;color:var(--red)}
+.thanks{grid-column:1/-1;display:flex;flex-direction:column;gap:10px;padding:10px 0}
+footer{border-top:1px solid var(--line);padding-block:32px 48px;font-size:14px;color:var(--muted)}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="logo" href="/"><span class="mark" aria-hidden="true"><i></i></span>PhilanthroData</a>
+    <div class="links">
+      <a href="/#approach">Approach</a>
+      <a href="/#services">Services</a>
+      <a href="/#about">About</a>
+      <a href="/#case-study">Case studies</a>
+      <a href="/tools/" aria-current="page">Free tools</a>
+      <a class="btn solid" href="#request">Request a free review</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <div class="eyebrow">Free data tools for nonprofits</div>
+      <h1>Find the donors you’re losing, without handing over your data.</h1>
+      <p class="lead">Export a list from your CRM or email platform and drop it into one of our free tools. In a few seconds you’ll see lapsed donors worth a call, duplicate records, and contacts you can’t reach. The check runs in your browser, so your file never leaves your computer.</p>
+      <div class="ctas">
+        <a class="btn solid" href="donor-health-check.html">Try the Donor Data Health Check</a>
+        <a class="btn line" href="#request">Request a free review</a>
+      </div>
+    </div>
+    <aside class="panel" aria-label="Example results from the sample file">
+      <div class="tag">Sample donor file: findings</div>
+      <div class="row">Records checked<b>1,312</b></div>
+      <div class="row">Retention, 2024 → 2025<b>55%</b></div>
+      <div class="row">Gave last year, not yet this year<b>221 donors</b></div>
+      <div class="row">Duplicate records<span class="chip">merge list ready</span></div>
+      <div class="down" aria-hidden="true">↓</div>
+      <div class="act"><span>01</span>Call the 221 LYBUNT donors before year-end. They gave $107,775 last year.</div>
+      <div class="act"><span>02</span>Merge duplicates so no one gets two copies of your appeal.</div>
+      <div class="note">Fictional sample data. Load it yourself in the tool.</div>
+    </aside>
+  </div>
+</header>
+
+<section id="tools" style="padding-top:24px">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Pick a tool</div>
+      <h2>Three checks, one promise: we never see your file.</h2>
+      <p>Each tool is a single web page. Use it here, or download it and run it with your Wi‑Fi off.</p>
+    </div>
+    <div class="tools">
+      <article class="tool">
+        <div class="for">For your donor database</div>
+        <h3>Donor Data Health Check</h3>
+        <p>A health score for your donor file, with the people and dollars that are slipping away.</p>
+        <dl>
+          <dt>Upload</dt><dd>A donor export (Bloomerang, Little Green Light, DonorPerfect, Neon, Salesforce). Add a gift history file for retention.</dd>
+          <dt>You get</dt><dd>Retention rate, LYBUNT and lapsed donors, a re-engage list, duplicates, and bounced or missing contact info.</dd>
+        </dl>
+        <div class="go"><a class="btn solid" href="donor-health-check.html">Open the tool</a><a class="dl" href="donor-health-check.html" download>Download to run offline</a></div>
+      </article>
+      <article class="tool">
+        <div class="for">For any contact list</div>
+        <h3>Contact Duplicate Check</h3>
+        <p>Find people you have twice, in one system or across your CRM and email list.</p>
+        <dl>
+          <dt>Upload</dt><dd>One or more exports from any CRM, donor database, or email platform such as Mailchimp or Constant Contact.</dd>
+          <dt>You get</dt><dd>Duplicate groups, people found in both systems, and duplicates where one copy unsubscribed but another is still on your list.</dd>
+        </dl>
+        <div class="go"><a class="btn solid" href="contact-duplicate-check.html">Open the tool</a><a class="dl" href="contact-duplicate-check.html" download>Download to run offline</a></div>
+      </article>
+      <article class="tool niche">
+        <div class="for">For Marketo + Salesforce</div>
+        <h3>Marketo + Salesforce Duplicate Check</h3>
+        <p>For organizations running both platforms, where records sync between systems and many contacts share an employer or campus.</p>
+        <dl>
+          <dt>Upload</dt><dd>Marketo people exports and Salesforce Lead and Contact exports.</dd>
+          <dt>You get</dt><dd>Duplicate candidates, expected sync links, and colleagues kept separate from true duplicates.</dd>
+        </dl>
+        <div class="go"><a class="btn line" href="marketo-salesforce-duplicate-check.html">Open the tool</a><a class="dl" href="marketo-salesforce-duplicate-check.html" download>Download to run offline</a></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="privacy">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">How we protect your data</div>
+      <h2>You don’t have to trust us. You can check.</h2>
+      <p>Most data tools ask you to upload your donor list to their servers. Ours can’t: there’s no server to send it to.</p>
+    </div>
+    <div class="promises">
+      <div class="promise"><h3>Nothing is uploaded</h3><p>Your file is read by your own browser. Open your browser’s developer tools while you run a check and you’ll see no network requests.</p></div>
+      <div class="promise"><h3>It works with Wi‑Fi off</h3><p>Load the page, turn off Wi‑Fi, then run the check. It still works, because nothing needs to leave your computer.</p></div>
+      <div class="promise"><h3>Export only what’s needed</h3><p>Names, contact fields, and last gift date are enough. Leave notes, wealth screening, and giving details out of the file.</p></div>
+    </div>
+    <blockquote>We built these tools so a small nonprofit can find the money it’s losing in an afternoon, without a data hire or a new vendor contract.</blockquote>
+  </div>
+</section>
+
+<section id="request">
+  <div class="wrap req">
+    <div class="req-copy">
+      <div class="eyebrow">Free review or walkthrough</div>
+      <h2>Want a second set of eyes?</h2>
+      <p>A PhilanthroData volunteer will look at your website and analytics, or walk your team through your tool results. There’s no cost and no sales pitch at the end.</p>
+      <ol class="steps">
+        <li><span><b>Tell us a little about your organization.</b> Two minutes.</span></li>
+        <li><span><b>We reply within two business days</b> with one specific thing we noticed on your website.</span></li>
+        <li><span><b>If it’s useful, we set up a 30‑minute call</b> to fix it with you.</span></li>
+      </ol>
+      <p class="mail">Prefer email? Write to <a href="mailto:chad.priest@philanthrodata.org">chad.priest@philanthrodata.org</a>.</p>
+    </div>
+
+    <form id="leadForm" action="" method="POST" novalidate>
+      <div class="f"><label for="f_name">Your name</label><input type="text" id="f_name" name="name" autocomplete="name" required></div>
+      <div class="f"><label for="f_email">Work email</label><input type="email" id="f_email" name="email" autocomplete="email" required></div>
+      <div class="f"><label for="f_org">Organization</label><input type="text" id="f_org" name="organization" autocomplete="organization" required></div>
+      <div class="f"><label for="f_site">Website <span class="opt">(optional)</span></label><input type="url" id="f_site" name="website" placeholder="yourorg.org" inputmode="url"></div>
+      <div class="f"><label for="f_role">Your role</label>
+        <select id="f_role" name="role">
+          <option value="">Choose one</option>
+          <option>Executive director</option>
+          <option>Development / fundraising</option>
+          <option>Marketing / communications</option>
+          <option>Operations / database</option>
+          <option>Board member</option>
+          <option>Volunteer</option>
+          <option>Other</option>
+        </select></div>
+      <div class="f"><label for="f_crm">Where your contacts live</label>
+        <select id="f_crm" name="crm">
+          <option value="">Choose one</option>
+          <option>Bloomerang</option>
+          <option>Little Green Light</option>
+          <option>DonorPerfect</option>
+          <option>Neon CRM</option>
+          <option>Salesforce / NPSP</option>
+          <option>Blackbaud (Raiser’s Edge, eTapestry)</option>
+          <option>Givebutter / Donorbox / Classy</option>
+          <option>HubSpot</option>
+          <option>Mailchimp / Constant Contact only</option>
+          <option>Spreadsheets</option>
+          <option>Not sure</option>
+          <option>Other</option>
+        </select></div>
+      <div class="f"><label for="f_budget">Annual budget <span class="opt">(for our sliding scale)</span></label>
+        <select id="f_budget" name="budget">
+          <option value="">Choose one</option>
+          <option>Under $250K</option>
+          <option>$250K–$1M</option>
+          <option>$1M–$5M</option>
+          <option>Over $5M</option>
+          <option>Prefer not to say</option>
+        </select></div>
+      <div class="f" aria-hidden="true"></div>
+      <fieldset class="f full">
+        <legend class="legend">What would help? <span class="opt">Check any.</span></legend>
+        <div class="checks">
+          <label><input type="checkbox" name="interest" value="Free website & analytics review" id="i_review" checked>Free website &amp; analytics review</label>
+          <label><input type="checkbox" name="interest" value="Walk through my tool results" id="i_walk">Walk through my tool results</label>
+          <label><input type="checkbox" name="interest" value="Help merging duplicates" id="i_dupes">Help merging duplicates in my CRM</label>
+          <label><input type="checkbox" name="interest" value="Tell me when Pro is ready" id="i_pro">Tell me when Pro features are ready</label>
+        </div>
+      </fieldset>
+      <div class="f full"><label for="f_msg">The question you wish your data could answer <span class="opt">(optional)</span></label><textarea id="f_msg" name="message" placeholder="e.g. Which of our donors are about to lapse?"></textarea></div>
+      <input type="hidden" name="source" id="f_source" value="tools page">
+      <input type="hidden" name="_subject" value="New request from the PhilanthroData tools page">
+      <div class="hp" aria-hidden="true"><label for="f_hp">Leave this empty</label><input type="text" id="f_hp" name="_gotcha" tabindex="-1" autocomplete="off"></div>
+      <div class="msg err" id="formErr" role="alert" hidden></div>
+      <div class="submit">
+        <button class="btn solid" type="submit" id="sendBtn">Send request</button>
+        <p class="fine">We use this only to reply to you. We never ask for your donor data through this form.</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>PhilanthroData, Inc. · A Massachusetts nonprofit corporation · 501(c)(3) status pending</span>
+    <span>© 2026 · <a href="/">philanthrodata.org</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  /* ---------- SETUP ----------
+     FORM_ENDPOINT: where form entries are sent. Create a free form at https://formspree.io,
+     then paste its endpoint, e.g. "https://formspree.io/f/abcdwxyz". Formspree emails you each request.
+     If your homepage contact form already posts somewhere, you can use that same address here.
+     While this is "", the form shows the email address instead of sending. */
+  var FORM_ENDPOINT = "";
+  var FALLBACK_EMAIL = "chad.priest@philanthrodata.org";
+
+  var $ = function(id){ return document.getElementById(id); };
+  var form = $("leadForm"), err = $("formErr"), btn = $("sendBtn");
+  form.setAttribute("action", FORM_ENDPOINT || "");
+
+  /* Pre-check boxes based on the link people came from (?interest=walkthrough, duplicates, pro: Feature) */
+  try {
+    var params = new URLSearchParams(location.search), want = (params.get("interest") || "").toLowerCase();
+    if (want) {
+      $("f_source").value = "tools page · " + params.get("interest");
+      if (want.indexOf("pro") === 0) { $("i_pro").checked = true; $("i_review").checked = false; }
+      if (want.indexOf("walkthrough") >= 0) { $("i_walk").checked = true; $("i_review").checked = false; }
+      if (want.indexOf("duplicate") >= 0) { $("i_dupes").checked = true; $("i_review").checked = false; }
+    }
+  } catch (e) {}
+
+  function showErr(html){ err.innerHTML = html; err.hidden = false; }
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    err.hidden = true;
+    var missing = [];
+    [["f_name","your name"],["f_email","your email"],["f_org","your organization"]].forEach(function(f){ if (!$(f[0]).value.trim()) missing.push(f[1]); });
+    var email = $("f_email").value.trim();
+    if (missing.length) { showErr("Please add " + missing.join(", ") + "."); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { showErr("That email address doesn’t look complete. Check it and try again."); $("f_email").focus(); return; }
+    if ($("f_hp").value) return; // bot
+
+    if (!FORM_ENDPOINT) {
+      showErr("This form isn’t connected yet. Please email <a href=\"mailto:" + FALLBACK_EMAIL + "\">" + FALLBACK_EMAIL + "</a> and we’ll reply within two business days.");
+      return;
+    }
+    btn.disabled = true; btn.textContent = "Sending…";
+    fetch(FORM_ENDPOINT, { method: "POST", body: new FormData(form), headers: { "Accept": "application/json" } })
+      .then(function(r){
+        if (!r.ok) throw new Error("status " + r.status);
+        form.innerHTML = '<div class="thanks"><h3>Thanks. We got your request.</h3><p>We’ll reply to ' + email.replace(/[<>&"]/g, "") + ' within two business days. If you don’t see it, check your spam folder or email ' + FALLBACK_EMAIL + '.</p></div>';
+      })
+      .catch(function(){
+        btn.disabled = false; btn.textContent = "Send request";
+        showErr("Your request didn’t send. Check your connection and try again, or email <a href=\"mailto:" + FALLBACK_EMAIL + "\">" + FALLBACK_EMAIL + "</a>.");
+      });
+  });
+})();
+</script>
+</body>
+</html>
