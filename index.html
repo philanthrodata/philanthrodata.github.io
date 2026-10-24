@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>document.documentElement.classList.add('js');</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PhilanthroData | Analytics help for nonprofits</title>
@@ -19,6 +20,14 @@
   gtag('js', new Date());
   gtag('config', 'G-H648DGCS6E');
 </script>
+<!-- Microsoft Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "CLARITY_PROJECT_ID");
+</script>
 
 <style>
   :root{
@@ -33,7 +42,7 @@
     --white:#FFFFFF;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
+  html{scroll-behavior:smooth; scroll-padding-top:84px;}
   body{
     background:var(--parchment);
     color:var(--ink-deep);
@@ -63,7 +72,22 @@
   .btn{display:inline-block; padding:10px 20px; border-radius:6px; font-size:14px; font-weight:500; text-decoration:none; transition:transform 0.15s ease, box-shadow 0.15s ease;}
   .btn-primary{background:var(--ink); color:var(--white);}
   .btn-primary:hover{transform:translateY(-1px); box-shadow:0 4px 14px rgba(31,58,95,0.25);}
-  @media (max-width:760px){ nav.links a:not(.btn){display:none;} }
+  .menu-toggle{display:none; background:none; border:1px solid var(--line); border-radius:6px; padding:8px 10px; cursor:pointer; color:var(--ink);}
+  .menu-toggle svg{display:block;}
+  .cta-short{display:none;}
+  @media (max-width:760px){
+    .nav{padding:12px 20px; flex-wrap:wrap;}
+    .brand-mark{width:34px; height:34px;}
+    nav.links{gap:10px;}
+    nav.links a:not(.btn){display:none;}
+    .menu-toggle{display:block;}
+    .cta-long{display:none;}
+    .cta-short{display:inline;}
+    .mobile-menu{display:none; width:100%; flex-direction:column; padding:8px 0 4px;}
+    .mobile-menu.open{display:flex;}
+    .mobile-menu a{padding:12px 0; border-top:1px solid var(--line); font-size:15px; color:var(--ink); text-decoration:none; font-weight:500;}
+  }
+  @media (min-width:761px){ .mobile-menu{display:none !important;} }
   .hero{padding:88px 0 96px;}
   .hero-grid{display:grid; grid-template-columns:1.1fr 0.9fr; gap:64px; align-items:center;}
   .eyebrow{font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--sage); font-weight:500; margin-bottom:18px; display:block;}
@@ -153,10 +177,13 @@
   footer{border-top:1px solid var(--line); padding:40px 0;}
   .footer-row{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;}
   footer .foot-brand{font-family:'Fraunces', serif; font-size:15px; color:var(--ink);}
+  footer .foot-links{font-size:13px; color:var(--ink-soft);}
+  footer .foot-links a{text-decoration:none;}
+  footer .foot-links a:hover{color:var(--ink);}
   footer .foot-meta{font-size:12.5px; color:var(--ink-soft); font-family:'IBM Plex Mono', monospace;}
-  .reveal{opacity:0; transform:translateY(14px); transition:opacity 0.6s ease, transform 0.6s ease;}
-  .reveal.visible{opacity:1; transform:translateY(0);}
-  @media (prefers-reduced-motion: reduce){ .reveal{opacity:1; transform:none; transition:none;} }
+  .js .reveal{opacity:0; transform:translateY(14px); transition:opacity 0.6s ease, transform 0.6s ease;}
+  .js .reveal.visible{opacity:1; transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){ .js .reveal{opacity:1; transform:none; transition:none;} }
   @media (max-width:900px){ .hero-grid{grid-template-columns:1fr;} h1.headline{font-size:34px;} }
 </style>
 </head>
@@ -174,8 +201,18 @@
       <a href="#about">About</a>
       <a href="#case-study">Case studies</a>
       <a href="/tools/">Free tools</a>
-      <a class="btn btn-primary" href="#contact" onclick="gtag('event','cta_click',{cta:'nav'})">Start a conversation</a>
+      <a class="btn btn-primary" href="#contact" onclick="gtag('event','cta_click',{cta:'nav'})"><span class="cta-long">Start a conversation</span><span class="cta-short">Let's talk</span></a>
+      <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
     </nav>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="#approach">Approach</a>
+      <a href="#services">Services</a>
+      <a href="#about">About</a>
+      <a href="#case-study">Case studies</a>
+      <a href="/tools/">Free tools</a>
+    </div>
   </div>
 </header>
 
@@ -412,6 +449,7 @@
 <footer>
   <div class="wrap footer-row">
     <span class="foot-brand">PhilanthroData</span>
+    <nav class="foot-links" aria-label="Footer"><a href="#services">Services</a> · <a href="#case-study">Case studies</a> · <a href="/tools/">Free tools</a> · <a href="#contact">Contact</a></nav>
     <span class="foot-meta">PhilanthroData, Inc. · A Massachusetts nonprofit corporation · 501(c)(3) status pending · © 2026</span>
   </div>
 </footer>
@@ -426,16 +464,24 @@
   }, { threshold: 0.15 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+  const menuBtn = document.querySelector('.menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  menuBtn.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open);
+    menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menu.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+    menuBtn.setAttribute('aria-label', 'Open menu');
+  }));
+
   document.getElementById('lead-form').addEventListener('submit', async function(e){
     e.preventDefault();
     const form = e.target;
     const status = document.getElementById('form-status');
     const role = form.role.value || 'unknown';
-
-    gtag('event', 'generate_lead', {
-      lead_type: role,
-      form_id: 'philanthrodata_contact'
-    });
 
     try {
       const res = await fetch(form.action, {
@@ -445,6 +491,11 @@
       });
       status.style.display = 'block';
       if (res.ok) {
+        gtag('event', 'generate_lead', {
+          lead_type: role,
+          form_id: 'philanthrodata_contact'
+        });
+        if (window.clarity) clarity('event', 'generate_lead');
         status.style.color = '#5C7A6B';
         status.textContent = "Thanks, we'll be in touch soon.";
         form.reset();
