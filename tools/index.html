@@ -126,6 +126,14 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
 .thanks{grid-column:1/-1;display:flex;flex-direction:column;gap:10px;padding:10px 0}
 footer{border-top:1px solid var(--line);padding-block:32px 48px;font-size:14px;color:var(--muted)}
 footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+/* access gate */
+.gate{border:0;padding:0;border-radius:14px;max-width:440px;width:calc(100% - 32px);background:var(--paper);color:var(--ink);box-shadow:0 30px 70px -20px rgb(29 47 79 / .5)}
+.gate::backdrop{background:rgb(29 47 79 / .55)}
+.gate form{border:0;border-radius:0;padding:28px;grid-template-columns:1fr;gap:16px;background:transparent}
+.gate h3{font-size:24px}
+.gate .sub{color:#47536a;font-size:15px}
+.gate .x{position:absolute;top:10px;right:12px;background:none;border:0;font-size:24px;line-height:1;color:var(--muted);cursor:pointer;padding:6px}
+.gate .btn{width:100%}
 </style>
 </head>
 <body>
@@ -320,7 +328,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
      then paste its endpoint, e.g. "https://formspree.io/f/abcdwxyz". Formspree emails you each request.
      If your homepage contact form already posts somewhere, you can use that same address here.
      While this is "", the form shows the email address instead of sending. */
-  var FORM_ENDPOINT = "";
+  var FORM_ENDPOINT = "https://formspree.io/f/myezbpee";
   var FALLBACK_EMAIL = "chad.priest@philanthrodata.org";
 
   var $ = function(id){ return document.getElementById(id); };
@@ -364,6 +372,64 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
         btn.disabled = false; btn.textContent = "Send request";
         showErr("Your request didn’t send. Check your connection and try again, or email <a href=\"mailto:" + FALLBACK_EMAIL + "\">" + FALLBACK_EMAIL + "</a>.");
       });
+  });
+})();
+</script>
+<dialog class="gate" id="gate" aria-labelledby="gateTitle">
+  <form id="gateForm" method="dialog" novalidate>
+    <button class="x" type="button" id="gateClose" aria-label="Close">×</button>
+    <div class="eyebrow">Free access</div>
+    <h3 id="gateTitle">Tell us who you are, then open the tool.</h3>
+    <p class="sub">We ask once. Your data file still never leaves your browser; only these three fields are sent to us.</p>
+    <div class="f"><label for="g_name">Name</label><input type="text" id="g_name" name="name" autocomplete="name" required></div>
+    <div class="f"><label for="g_email">Email</label><input type="email" id="g_email" name="email" autocomplete="email" required></div>
+    <div class="f"><label for="g_org">Organization</label><input type="text" id="g_org" name="organization" autocomplete="organization" required></div>
+    <div class="hp" aria-hidden="true"><label for="g_hp">Leave this empty</label><input type="text" id="g_hp" name="_gotcha" tabindex="-1" autocomplete="off"></div>
+    <div class="msg err" id="gateErr" role="alert" hidden></div>
+    <button class="btn solid" type="submit" id="gateBtn">Open the tool</button>
+  </form>
+</dialog>
+
+<script>
+(function(){
+  "use strict";
+  /* Access gate: name, email and organization before a tool opens. Sent to the same Formspree form as the homepage.
+     Remembered in this browser, so people only fill it in once. Direct links to a tool page still work. */
+  var ENDPOINT = "https://formspree.io/f/myezbpee", KEY = "pd_tools_access";
+  var $ = function(id){ return document.getElementById(id); };
+  var dlg = $("gate"), form = $("gateForm"), err = $("gateErr"), btn = $("gateBtn"), pending = null;
+  function unlocked(){ try { return localStorage.getItem(KEY) === "1"; } catch(e){ return false; } }
+  function remember(){ try { localStorage.setItem(KEY, "1"); } catch(e){} }
+  function go(a){
+    if (a.hasAttribute("download")) { a.dataset.passed = "1"; a.click(); delete a.dataset.passed; }
+    else location.href = a.href;
+  }
+  var links = document.querySelectorAll('a[href$="-check.html"]');
+  Array.prototype.forEach.call(links, function(a){
+    a.addEventListener("click", function(e){
+      if (a.dataset.passed || unlocked()) return;
+      if (!dlg.showModal) return; /* very old browsers: let them through */
+      e.preventDefault(); pending = a; err.hidden = true;
+      btn.textContent = a.hasAttribute("download") ? "Download the tool" : "Open the tool";
+      dlg.showModal(); $("g_name").focus();
+    });
+  });
+  $("gateClose").addEventListener("click", function(){ dlg.close(); });
+  dlg.addEventListener("click", function(e){ if (e.target === dlg) dlg.close(); });
+  form.addEventListener("submit", function(e){
+    e.preventDefault(); err.hidden = true;
+    var name = $("g_name").value.trim(), email = $("g_email").value.trim(), org = $("g_org").value.trim();
+    if (!name || !email || !org) { err.textContent = "Please fill in all three fields."; err.hidden = false; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { err.textContent = "That email address doesn’t look complete."; err.hidden = false; $("g_email").focus(); return; }
+    var a = pending;
+    if ($("g_hp").value) { dlg.close(); return; }
+    var data = new FormData(form);
+    data.append("tool", a ? a.getAttribute("href").replace(".html","") + (a.hasAttribute("download") ? " (download)" : "") : "");
+    data.append("_subject", "Free tool access: " + org);
+    btn.disabled = true; btn.textContent = "One moment…";
+    var done = function(){ remember(); btn.disabled = false; dlg.close(); if (a) go(a); };
+    /* If the form service is down, let them in anyway rather than blocking the tool. */
+    fetch(ENDPOINT, { method: "POST", body: data, headers: { "Accept": "application/json" } }).then(done, done);
   });
 })();
 </script>
