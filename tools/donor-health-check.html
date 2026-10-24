@@ -1,15 +1,18 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<!-- Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-H648DGCS6E"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-H648DGCS6E');
-</script>
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; form-action 'none'">
+<script>
+/* PhilanthroData access gate. This page blocks all network connections (so a data file can never leave the browser),
+   so the sign-up form lives on /tools/. First-time visitors who arrive here directly are sent there, then forwarded back.
+   Offline downloaded copies skip this: the download link on /tools/ is already gated. */
+(function(){
+  if (location.protocol === "file:") return;
+  try { if (localStorage.getItem("pd_tools_access") === "1") return; } catch (e) { return; }
+  var page = location.pathname.replace(/\/$/, "").split("/").pop().replace(/\.html$/, "");
+  location.replace("/tools/?gate=" + encodeURIComponent(page));
+})();
+</script>
 <title>Donor Data Health Check</title>
 </head><body>
 

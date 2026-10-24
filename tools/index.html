@@ -411,7 +411,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 (function(){
   "use strict";
   /* Access gate: name, email and organization before a tool opens. Sent to the same Formspree form as the homepage.
-     Remembered in this browser, so people only fill it in once. Direct links to a tool page still work. */
+     Remembered in this browser, so people only fill it in once. Each tool page also has its own gate (same flag), so direct links are covered too. */
   var ENDPOINT = "https://formspree.io/f/myezbpee", KEY = "pd_tools_access";
   var $ = function(id){ return document.getElementById(id); };
   var dlg = $("gate"), form = $("gateForm"), err = $("gateErr"), btn = $("gateBtn"), pending = null;
@@ -431,6 +431,22 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       dlg.showModal(); $("g_name").focus();
     });
   });
+  /* Arrived from a tool page (?gate=tool-name): open the gate for that tool, then forward to it. */
+  try {
+    var want = new URLSearchParams(location.search).get("gate");
+    if (want) {
+      var target = Array.prototype.filter.call(links, function(a){
+        return !a.hasAttribute("download") && a.getAttribute("href").replace(/\.html$/, "") === want;
+      })[0];
+      if (target) {
+        if (unlocked()) { go(target); }
+        else if (dlg.showModal) {
+          pending = target; err.hidden = true; btn.textContent = "Open the tool";
+          dlg.showModal(); $("g_name").focus();
+        }
+      }
+    }
+  } catch (e) {}
   $("gateClose").addEventListener("click", function(){ dlg.close(); });
   dlg.addEventListener("click", function(e){ if (e.target === dlg) dlg.close(); });
   form.addEventListener("submit", function(e){
@@ -444,7 +460,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     data.append("tool", a ? a.getAttribute("href").replace(".html","") + (a.hasAttribute("download") ? " (download)" : "") : "");
     data.append("_subject", "Free tool access: " + org);
     btn.disabled = true; btn.textContent = "One moment…";
-    var done = function(){ remember(); btn.disabled = false; dlg.close(); if (a) go(a); };
+    var done = function(){ remember(); try { if (window.gtag) gtag("event", "generate_lead", { lead_type: "tool_access", form_id: "tools_gate", tool_name: a ? a.getAttribute("href").replace(".html","") : "" }); } catch (e) {} btn.disabled = false; dlg.close(); if (a) go(a); };
     /* If the form service is down, let them in anyway rather than blocking the tool. */
     fetch(ENDPOINT, { method: "POST", body: data, headers: { "Accept": "application/json" } }).then(done, done);
   });
