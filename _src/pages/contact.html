@@ -1,0 +1,45 @@
+  <section class="page-hero" style="padding-bottom:24px;">
+    <div class="wrap">
+      <span class="eyebrow">Start a conversation</span>
+      <h1>Have 30 minutes to talk about your data?</h1>
+      <p class="lede">You don't need a pitch deck. Just tell me the one question you wish your data could answer.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:16px;">
+    <div class="wrap contact-grid">
+      <div class="reveal">
+        <h2 style="font-size:24px;">What happens next</h2>
+        <ol class="next-steps">
+          <li><strong>I reply within two business days</strong>To set up a time, or with a question if I need more detail.</li>
+          <li><strong>A free 30-minute call</strong>We talk through your question and the systems behind it, and agree on the one decision the work should support.</li>
+          <li><strong>A written scope and price</strong>If it's a fit, you get both in writing before any work starts. No obligation until then.</li>
+          <li><strong>3 to 4 weeks to handoff</strong>A typical first engagement takes about 10 hours of my time. See <a href="/services/" style="color:var(--ink); font-weight:500;">services and pricing</a>.</li>
+        </ol>
+        <p class="muted" style="font-size:14.5px;">Small budget, or no budget for this at all? Say so in your message and ask about subsidized support.</p>
+      </div>
+
+      <form id="lead-form" class="reveal" action="https://formspree.io/f/myezbpee" method="POST" novalidate>
+        <label for="role">I am a… <span class="req" aria-hidden="true">*</span></label>
+        <select id="role" name="role" required>
+          <option value="">Choose one</option>
+          <option value="nonprofit">Nonprofit looking for data help</option>
+          <option value="volunteer">Volunteer with data or analytics skills</option>
+          <option value="other">Something else</option>
+        </select>
+        <label for="name">Name <span class="req" aria-hidden="true">*</span></label>
+        <input type="text" id="name" name="name" autocomplete="name" required>
+        <label for="email">Email <span class="req" aria-hidden="true">*</span></label>
+        <input type="email" id="email" name="email" autocomplete="email" required>
+        <label for="org">Organization</label>
+        <input type="text" id="org" name="organization" autocomplete="organization">
+        <label for="message">The one question you wish your data could answer</label>
+        <textarea id="message" name="message" placeholder="e.g. Do people who attend our free workshops come back and buy tickets?"></textarea>
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute; left:-9999px;">
+        <button type="submit">Send</button>
+        <div id="form-status" role="status"></div>
+        <p class="hint" style="text-align:center;"><span class="req">*</span> Required. See the <a href="/privacy/" style="color:var(--ink);">privacy policy</a> for how I use your details.</p>
+        <p class="form-note">Prefer email? <a href="mailto:chad.priest@philanthrodata.org">chad.priest@philanthrodata.org</a></p>
+      </form>
+    </div>
+  </section>

@@ -1,0 +1,124 @@
+  <section class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow">How access works</span>
+      <h1>You stay in control of your accounts</h1>
+      <p class="lede">To fix your data I need access to the tools involved. You never share a password, I ask for the least access the work needs, and you can remove me at any time.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:16px;">
+    <div class="wrap prose reveal">
+      <h2 style="margin-top:0;">The ground rules</h2>
+      <ul>
+        <li><strong>Never send me your own password.</strong> Every tool below lets you add a person by email with a set role, so nobody shares a login.</li>
+        <li><strong>Use my email address, or create one for me.</strong> Many organizations prefer to give me an address on their own domain (for example, data-help@yourorg.org). That keeps access under your control: when we're done, you turn off that one account and its access to every tool goes with it.</li>
+        <li><strong>Least access.</strong> The roles below are what I need to audit and fix things. If I only need to look, I'll say so and you can choose a view-only role.</li>
+        <li><strong>Only the tools in your engagement.</strong> Skip any tool we aren't working on.</li>
+        <li><strong>Your donor data stays out of AI tools.</strong> I never put it into one.</li>
+        <li><strong>Removal at handoff.</strong> When the work is done, I send you the list of tools you gave me access to, and you remove me that day or after any follow-up period we've agreed.</li>
+      </ul>
+      <p>You'll need admin rights yourself to add a user. If a step is greyed out, whoever set up the account (often a past staff member or agency) has to add me or give you admin first.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:0;">
+    <div class="wrap">
+      <div class="section-head reveal" style="margin-bottom:0;">
+        <span class="eyebrow">Tool by tool</span>
+        <h2 class="section-title">How to add me</h2>
+      </div>
+      <div class="steps-grid">
+        <div class="steps-card reveal">
+          <h3>Google Analytics 4</h3>
+          <p class="role">Role: Editor, on your property (view-only: Viewer)</p>
+          <ol>
+            <li>Sign in at analytics.google.com and pick your website's property.</li>
+            <li>Click <strong>Admin</strong> (the gear icon, bottom left).</li>
+            <li>Under Property settings, click <strong>Property access management</strong>.</li>
+            <li>Click the blue <strong>+</strong>, then <strong>Add users</strong>.</li>
+            <li>Enter my email address and choose <strong>Editor</strong>, then click <strong>Add</strong>.</li>
+          </ol>
+          <p>Add me at the property level, not the account level, so I only see this website.</p>
+        </div>
+        <div class="steps-card reveal">
+          <h3>Google Ads, including Ad Grants</h3>
+          <p class="role">Access level: Standard (view-only: Read only)</p>
+          <ol>
+            <li>Sign in at ads.google.com and open your account (for Ad Grants, the grant account).</li>
+            <li>Click <strong>Admin</strong> in the left menu, then <strong>Access and security</strong>.</li>
+            <li>Click the blue <strong>+</strong>.</li>
+            <li>Enter my email address and choose <strong>Standard</strong>.</li>
+            <li>Click <strong>Send invitation</strong>.</li>
+          </ol>
+          <p>Standard can build and edit campaigns but can't add or remove users. Linking Ads to Analytics needs Admin, so if your engagement includes that, we'll do that one step together on a short call.</p>
+        </div>
+        <div class="steps-card reveal">
+          <h3>Google Tag Manager</h3>
+          <p class="role">Permission: Publish on your website's container (or Approve)</p>
+          <ol>
+            <li>Sign in at tagmanager.google.com and open your account.</li>
+            <li>Click <strong>Admin</strong>.</li>
+            <li>In the Container column, click <strong>User Management</strong>.</li>
+            <li>Click the blue <strong>+</strong>, then <strong>Add users</strong>.</li>
+            <li>Enter my email address, choose <strong>Publish</strong>, then click <strong>Invite</strong>.</li>
+          </ol>
+          <p>Choose Approve instead if you'd rather someone on your team publishes each change.</p>
+        </div>
+        <div class="steps-card reveal">
+          <h3>Google Search Console</h3>
+          <p class="role">Permission: Full user (view-only: Restricted)</p>
+          <ol>
+            <li>Sign in at search.google.com/search-console and pick your website.</li>
+            <li>Click <strong>Settings</strong> at the bottom of the left menu.</li>
+            <li>Click <strong>Users and permissions</strong>, then <strong>Add user</strong>.</li>
+            <li>Enter my email address, choose <strong>Full</strong>, then click <strong>Add</strong>.</li>
+          </ol>
+          <p>Please don't make me an Owner. Owners can manage other users, and I don't need that.</p>
+        </div>
+        <div class="steps-card reveal">
+          <h3>Salesforce</h3>
+          <p class="role">A user of my own, with the System Administrator profile</p>
+          <ol>
+            <li>Click the gear icon (top right), then <strong>Setup</strong>.</li>
+            <li>In Quick Find, type <strong>Users</strong> and click <strong>Users</strong>.</li>
+            <li>Click <strong>New User</strong> and enter my name and email address.</li>
+            <li>For Username, use my email plus your organization's name (for example, name@philanthrodata.org.yourorg), since Salesforce usernames must be unique worldwide.</li>
+            <li>Set User License to <strong>Salesforce</strong> and Profile to <strong>System Administrator</strong>, then click <strong>Save</strong>.</li>
+          </ol>
+          <p>Every change I make is then logged under my name, not yours. This uses one Salesforce license, so tell me first if you're out of free ones.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0;">
+    <div class="wrap">
+      <div class="section-head reveal" style="margin-bottom:0;">
+        <span class="eyebrow">When we're done</span>
+        <h2 class="section-title">How to remove me</h2>
+      </div>
+      <div class="table-wrap reveal">
+        <table class="ref">
+          <thead><tr><th>Tool</th><th>Where</th><th>What to click</th></tr></thead>
+          <tbody>
+            <tr><td>Google Analytics 4</td><td>Admin, then Property access management</td><td>Click my name, then Remove access</td></tr>
+            <tr><td>Google Ads</td><td>Admin, then Access and security</td><td>The three-dot menu by my name, then Remove access</td></tr>
+            <tr><td>Google Tag Manager</td><td>Admin, then Container User Management</td><td>Click my name, then Remove</td></tr>
+            <tr><td>Google Search Console</td><td>Settings, then Users and permissions</td><td>The three-dot menu by my name, then Remove access</td></tr>
+            <tr><td>Salesforce</td><td>Setup, then Users</td><td>Freeze my user, then edit it and untick Active (Salesforce doesn't delete users)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint reveal" style="margin-top:14px;">Menu names in these tools change from time to time. If something doesn't match, tell me what you see and I'll help.</p>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="wrap">
+      <h2 class="reveal">Questions about access or security?</h2>
+      <p class="reveal">Ask on the first call, which is free. You can also read the <a href="/privacy/" style="color:var(--ink); font-weight:500;">privacy policy</a>.</p>
+      <div class="hero-ctas reveal">
+        <a class="btn btn-primary" href="/contact/" data-cta="access_bottom">Start a conversation</a>
+      </div>
+    </div>
+  </section>
