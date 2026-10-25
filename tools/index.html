@@ -19,6 +19,7 @@
     y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
   })(window, document, "clarity", "script", "z2t1et94xl");
 </script>
+<script src="/assets/attribution.js?v=5" defer></script>
 <title>Free Data Tools | PhilanthroData</title>
 <meta name="description" content="Free tools that check your nonprofit's donor and contact data in your browser. Your file is never uploaded.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -506,9 +507,30 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       ],
       context: { pageUri: location.href, pageName: document.title }
     };
+    /* First-touch source, so contacts aren't all filed as "Offline Sources". These need matching
+       contact properties and hidden fields on the HubSpot form; if HubSpot rejects them, we resend without. */
+    var extra = [];
+    try {
+      var first = (window.pdAttribution ? window.pdAttribution().first : {}) || {};
+      ["utm_source","utm_medium","utm_campaign","utm_content","utm_term","gclid","referrer","landing_page"].forEach(function(k){
+        if (first[k]) extra.push({ objectTypeId: "0-1", name: k, value: first[k] });
+      });
+    } catch (x) {}
+    var base = body.fields;
     btn.disabled = true; btn.textContent = "Sending…";
     var track = function(){ try { if (window.gtag) gtag("event", "generate_lead", { lead_type: "tool_access", form_id: "tools_gate", tool_name: tool }); } catch (x) {} };
-    fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+    var send = function(fields){
+      body.fields = fields;
+      return fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    };
+    send(base.concat(extra))
+      .then(function(r){
+        if (r.ok || !extra.length || r.status !== 400) return r;
+        return r.clone().json().catch(function(){ return {}; }).then(function(j){
+          var emailErr = (j.errors || []).some(function(x){ return /EMAIL/i.test(x.errorType || "") || /email/i.test(x.message || ""); });
+          return emailErr ? r : send(base);
+        });
+      })
       .then(function(r){
         if (r.ok) {
           track();

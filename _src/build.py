@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / '_src' / 'pages'
 SITE = 'https://philanthrodata.org'
-ASSET_V = '4'  # bump to bust browser caches after editing assets/site.css or site.js
+ASSET_V = '5'  # bump to bust browser caches after editing assets/site.css or site.js
 
 PAGES = [
     # (body file, output path, url path, nav key, title, description)
@@ -126,6 +126,7 @@ def layout(url, active, title, desc, body):
   </div>
 </footer>
 
+<script src="/assets/attribution.js?v={ASSET_V}" defer></script>
 <script src="/assets/site.js?v={ASSET_V}" defer></script>
 </body>
 </html>
