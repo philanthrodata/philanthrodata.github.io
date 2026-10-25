@@ -150,6 +150,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .gate .sub{color:#47536a;font-size:15px}
 .gate .x{position:absolute;top:10px;right:12px;background:none;border:0;font-size:24px;line-height:1;color:var(--muted);cursor:pointer;padding:6px}
 .gate .btn{width:100%}
+.gate [hidden]{display:none!important}
+.gate .sent{padding:28px;display:grid;gap:12px}
+.gate .hint{display:block;margin-top:6px;font-size:14px;color:#47536a}
+.gate .hint a{color:var(--ink);font-weight:500}
 </style>
 </head>
 <body>
@@ -397,73 +401,132 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   <form id="gateForm" method="dialog" novalidate>
     <button class="x" type="button" id="gateClose" aria-label="Close">×</button>
     <div class="eyebrow">Free access</div>
-    <h3 id="gateTitle">Tell me who you are, then open the tool.</h3>
-    <p class="sub">I ask once. Your data file still never leaves your browser; only these three fields are sent to me.</p>
-    <div class="f"><label for="g_name">Name</label><input type="text" id="g_name" name="name" autocomplete="name" required></div>
-    <div class="f"><label for="g_email">Email</label><input type="email" id="g_email" name="email" autocomplete="email" required></div>
-    <div class="f"><label for="g_org">Organization</label><input type="text" id="g_org" name="organization" autocomplete="organization" required></div>
+    <h3 id="gateTitle">Tell me who you are, and I’ll email you the tools.</h3>
+    <p class="sub">I ask once. Your data file still never leaves your browser; only these details are sent to me.</p>
+    <div class="f"><label for="g_first">First name</label><input type="text" id="g_first" name="firstname" autocomplete="given-name" required></div>
+    <div class="f"><label for="g_last">Last name</label><input type="text" id="g_last" name="lastname" autocomplete="family-name" required></div>
+    <div class="f"><label for="g_email">Email</label><input type="email" id="g_email" name="email" autocomplete="email" required>
+      <small id="g_hint" class="hint" hidden></small></div>
+    <div class="f"><label for="g_org">Organization</label><input type="text" id="g_org" name="company" autocomplete="organization" required></div>
     <div class="hp" aria-hidden="true"><label for="g_hp">Leave this empty</label><input type="text" id="g_hp" name="_gotcha" tabindex="-1" autocomplete="off"></div>
     <div class="msg err" id="gateErr" role="alert" hidden></div>
-    <button class="btn solid" type="submit" id="gateBtn">Open the tool</button>
+    <button class="btn solid" type="submit" id="gateBtn">Email me the link</button>
   </form>
+  <div class="sent" id="gateSent" hidden>
+    <button class="x" type="button" id="gateClose2" aria-label="Close">×</button>
+    <div class="eyebrow">Check your inbox</div>
+    <h3>Your link is on its way.</h3>
+    <p class="sub">I sent it to <b id="gateTo"></b>. Open the email and click the link to start. It unlocks all three tools on that device.</p>
+    <p class="sub">Don’t see it in a few minutes? Check spam, or <a href="#" id="gateRetry">fix your email address</a>.</p>
+  </div>
 </dialog>
 
 <script>
 (function(){
   "use strict";
-  /* Access gate: name, email and organization before a tool opens. Sent to the same Formspree form as the homepage.
-     Remembered in this browser, so people only fill it in once. Each tool page also has its own gate (same flag), so direct links are covered too. */
-  var ENDPOINT = "https://formspree.io/f/myezbpee", KEY = "pd_tools_access";
+  /* Access gate: name, email and organization before a tool opens.
+     Sent to a HubSpot form, whose follow-up email contains links to the tools with ?access=1.
+     Visiting a tool with ?access=1 sets the pd_tools_access flag, so a mistyped email means no access.
+     Returning visitors who already have the flag go straight through. */
+  var HS_PORTAL = "247538328", HS_FORM = "f6a44dc5-c438-4905-a8a0-f0ccb379c847";
+  var ENDPOINT = "https://api.hsforms.com/submissions/v3/integration/submit/" + HS_PORTAL + "/" + HS_FORM;
+  var KEY = "pd_tools_access", CONTACT = "chad.priest@philanthrodata.org";
   var $ = function(id){ return document.getElementById(id); };
-  var dlg = $("gate"), form = $("gateForm"), err = $("gateErr"), btn = $("gateBtn"), pending = null;
+  var dlg = $("gate"), form = $("gateForm"), sent = $("gateSent"), err = $("gateErr"), btn = $("gateBtn"), hint = $("g_hint"), pending = null;
   function unlocked(){ try { return localStorage.getItem(KEY) === "1"; } catch(e){ return false; } }
   function remember(){ try { localStorage.setItem(KEY, "1"); } catch(e){} }
+  function toolName(a){ return a ? a.getAttribute("href").replace(".html","") : ""; }
   function go(a){
     if (a.hasAttribute("download")) { a.dataset.passed = "1"; a.click(); delete a.dataset.passed; }
     else location.href = a.href;
   }
+  function openGate(a){
+    pending = a; err.hidden = true; form.hidden = false; sent.hidden = true;
+    dlg.showModal(); $("g_first").focus();
+  }
+  /* Unlock link from the email landing on /tools/ (?access=1). */
+  try {
+    var q = new URLSearchParams(location.search);
+    if (q.has("access")) { remember(); history.replaceState(null, "", location.pathname + location.hash); }
+  } catch (e) {}
   var links = document.querySelectorAll('a[href$="-check.html"]');
   Array.prototype.forEach.call(links, function(a){
     a.addEventListener("click", function(e){
       if (a.dataset.passed || unlocked()) return;
       if (!dlg.showModal) return; /* very old browsers: let them through */
-      e.preventDefault(); pending = a; err.hidden = true;
-      btn.textContent = a.hasAttribute("download") ? "Download the tool" : "Open the tool";
-      dlg.showModal(); $("g_name").focus();
+      e.preventDefault(); openGate(a);
     });
   });
-  /* Arrived from a tool page (?gate=tool-name): open the gate for that tool, then forward to it. */
+  /* Arrived from a tool page (?gate=tool-name): open the gate for that tool. */
   try {
     var want = new URLSearchParams(location.search).get("gate");
     if (want) {
       var target = Array.prototype.filter.call(links, function(a){
-        return !a.hasAttribute("download") && a.getAttribute("href").replace(/\.html$/, "") === want;
+        return !a.hasAttribute("download") && toolName(a) === want;
       })[0];
       if (target) {
         if (unlocked()) { go(target); }
-        else if (dlg.showModal) {
-          pending = target; err.hidden = true; btn.textContent = "Open the tool";
-          dlg.showModal(); $("g_name").focus();
-        }
+        else if (dlg.showModal) { openGate(target); }
       }
     }
   } catch (e) {}
   $("gateClose").addEventListener("click", function(){ dlg.close(); });
+  $("gateClose2").addEventListener("click", function(){ dlg.close(); });
   dlg.addEventListener("click", function(e){ if (e.target === dlg) dlg.close(); });
+  $("gateRetry").addEventListener("click", function(e){
+    e.preventDefault(); sent.hidden = true; form.hidden = false; btn.disabled = false; btn.textContent = "Email me the link"; $("g_email").select();
+  });
+
+  /* "Did you mean…?" for common consumer-domain typos. A nudge only; it never blocks. */
+  var FIXES = { "gmail.co":"gmail.com","gmial.com":"gmail.com","gmai.com":"gmail.com","gnail.com":"gmail.com","gmail.con":"gmail.com",
+    "hotmail.co":"hotmail.com","hotmial.com":"hotmail.com","hotmal.com":"hotmail.com","hotmail.con":"hotmail.com",
+    "yahoo.co":"yahoo.com","yaho.com":"yahoo.com","yahoo.con":"yahoo.com","outlook.co":"outlook.com","outlok.com":"outlook.com",
+    "icloud.co":"icloud.com","aol.co":"aol.com","comcast.co":"comcast.net" };
+  $("g_email").addEventListener("blur", function(){
+    var v = this.value.trim(), at = v.lastIndexOf("@"), fix = at > 0 && FIXES[v.slice(at + 1).toLowerCase()];
+    if (!fix) { hint.hidden = true; return; }
+    var better = v.slice(0, at) + "@" + fix;
+    hint.innerHTML = 'Did you mean <a href="#"></a>?'; hint.querySelector("a").textContent = better; hint.hidden = false;
+    hint.querySelector("a").onclick = function(e){ e.preventDefault(); $("g_email").value = better; hint.hidden = true; };
+  });
+
   form.addEventListener("submit", function(e){
     e.preventDefault(); err.hidden = true;
-    var name = $("g_name").value.trim(), email = $("g_email").value.trim(), org = $("g_org").value.trim();
-    if (!name || !email || !org) { err.textContent = "Please fill in all three fields."; err.hidden = false; return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { err.textContent = "That email address doesn’t look complete."; err.hidden = false; $("g_email").focus(); return; }
-    var a = pending;
+    var first = $("g_first").value.trim(), last = $("g_last").value.trim(), email = $("g_email").value.trim(), org = $("g_org").value.trim();
+    if (!first || !last || !email || !org) { err.textContent = "Please fill in all four fields."; err.hidden = false; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(email)) { err.textContent = "That email address doesn’t look complete."; err.hidden = false; $("g_email").focus(); return; }
     if ($("g_hp").value) { dlg.close(); return; }
-    var data = new FormData(form);
-    data.append("tool", a ? a.getAttribute("href").replace(".html","") + (a.hasAttribute("download") ? " (download)" : "") : "");
-    data.append("_subject", "Free tool access: " + org);
-    btn.disabled = true; btn.textContent = "One moment…";
-    var done = function(){ remember(); try { if (window.gtag) gtag("event", "generate_lead", { lead_type: "tool_access", form_id: "tools_gate", tool_name: a ? a.getAttribute("href").replace(".html","") : "" }); } catch (e) {} btn.disabled = false; dlg.close(); if (a) go(a); };
-    /* If the form service is down, let them in anyway rather than blocking the tool. */
-    fetch(ENDPOINT, { method: "POST", body: data, headers: { "Accept": "application/json" } }).then(done, done);
+    var a = pending, tool = toolName(a) + (a && a.hasAttribute("download") ? " (download)" : "");
+    var body = {
+      fields: [
+        { objectTypeId: "0-1", name: "firstname", value: first },
+        { objectTypeId: "0-1", name: "lastname", value: last },
+        { objectTypeId: "0-1", name: "email", value: email },
+        { objectTypeId: "0-1", name: "company", value: org }
+      ],
+      context: { pageUri: location.href, pageName: document.title }
+    };
+    btn.disabled = true; btn.textContent = "Sending…";
+    var track = function(){ try { if (window.gtag) gtag("event", "generate_lead", { lead_type: "tool_access", form_id: "tools_gate", tool_name: tool }); } catch (x) {} };
+    fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+      .then(function(r){
+        if (r.ok) {
+          track();
+          $("gateTo").textContent = email; form.hidden = true; sent.hidden = false;
+          return;
+        }
+        return r.json().catch(function(){ return {}; }).then(function(j){
+          var bad = (j.errors || []).some(function(x){ return /EMAIL/i.test(x.errorType || "") || /email/i.test(x.message || ""); });
+          btn.disabled = false; btn.textContent = "Email me the link";
+          if (bad) { err.textContent = "That email address was rejected. Check it for typos and try again."; $("g_email").focus(); }
+          else { err.innerHTML = "Something went wrong sending your details. Try again, or email <a href=\"mailto:" + CONTACT + "\">" + CONTACT + "</a>."; }
+          err.hidden = false;
+        });
+      })
+      .catch(function(){
+        /* Form service unreachable: let them in rather than block the tool. */
+        remember(); track(); btn.disabled = false; dlg.close(); if (a) go(a);
+      });
   });
 })();
 </script>
