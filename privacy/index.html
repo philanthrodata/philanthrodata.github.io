@@ -90,7 +90,7 @@
     <h2>Our free data tools</h2>
     <p>Our tools (the Donor Data Health Check, Contact Duplicate Check, and Marketo + Salesforce Duplicate Check) read the file you choose and analyze it inside your own web browser. Your file, and anything the tools find in it, is never uploaded to us or anyone else.</p>
     <p>We back that up technically, not just as a promise. Each tool page carries a security policy that tells your browser to refuse every outgoing connection from that page. There are no analytics or session-recording scripts on the tool pages either. You can also download each tool and run it offline.</p>
-    <p>Before you use a tool for the first time, we ask for your name, email address and organization. That form is on our <a href="/tools/">tools page</a>, not on the tool itself, and only those details plus the name of the tool you chose are sent to us. Your browser then remembers that you've filled it in (see "Cookies and browser storage" below), so you won't be asked again on that device.</p>
+    <p>Before you use a tool for the first time, we ask for your name, email address and organization. That form is on our <a href="/tools/">tools page</a>, not on the tool itself, and only those details are sent to us. We then email you a link to the tools. Opening that link tells your browser to remember that you have access (see "Cookies and browser storage" below), so you won't be asked again on that device.</p>
 
     <h2>Information you give us</h2>
     <p>We collect information when you fill in one of our forms:</p>
@@ -98,7 +98,7 @@
       <thead><tr><th>Form</th><th>What it collects</th></tr></thead>
       <tbody>
         <tr><td>Contact form (contact page)</td><td>Whether you're a nonprofit, volunteer or other; your name, email, organization (optional) and your message.</td></tr>
-        <tr><td>Free tool access</td><td>Your name, email, organization, and which tool you asked to open.</td></tr>
+        <tr><td>Free tool access</td><td>Your first and last name, email and organization. We use your email address to send you the link to the tools.</td></tr>
         <tr><td>Free review request (tools page)</td><td>Your name, work email, organization, website (optional), role, and what you'd like help with.</td></tr>
       </tbody>
     </table>
@@ -118,7 +118,7 @@
       <tbody>
         <tr><td><code>_ga</code>, <code>_ga_*</code></td><td>Google Analytics</td><td>Tell visits apart and count returning visitors.</td></tr>
         <tr><td><code>_clck</code>, <code>_clsk</code></td><td>Microsoft Clarity</td><td>Group page views from the same visit and visitor.</td></tr>
-        <tr><td><code>pd_tools_access</code></td><td>PhilanthroData (stored in your browser only)</td><td>Remembers that you've filled in the tool access form, so you aren't asked again. It contains no personal information and is never sent to us.</td></tr>
+        <tr><td><code>pd_tools_access</code></td><td>PhilanthroData (stored in your browser only)</td><td>Set when you open the link we email you, so you aren't asked for your details again. It contains no personal information and is never sent to us.</td></tr>
       </tbody>
     </table>
     <p style="margin-top:14px;">You can clear or block cookies and browser storage in your browser settings. The site still works without them, though you may be asked for tool access details again.</p>
@@ -126,7 +126,8 @@
     <h2>Who processes your information</h2>
     <p>We use a small number of service providers to run this site. They process information on our behalf:</p>
     <ul>
-      <li><strong>Formspree</strong> receives form submissions and forwards them to us by email. See the <a href="https://formspree.io/legal/privacy-policy/" rel="noopener">Formspree privacy policy</a>.</li>
+      <li><strong>HubSpot</strong> receives free tool access requests, stores them in our contact database, and sends you the email with your link. See the <a href="https://legal.hubspot.com/privacy-policy" rel="noopener">HubSpot privacy policy</a>.</li>
+      <li><strong>Formspree</strong> receives our contact and review request forms and forwards them to us by email. See the <a href="https://formspree.io/legal/privacy-policy/" rel="noopener">Formspree privacy policy</a>.</li>
       <li><strong>Google</strong> (Google Analytics) and <strong>Microsoft</strong> (Clarity), as described above.</li>
       <li><strong>GitHub</strong> hosts the website. Like any web host, it may log basic technical information such as IP addresses to keep the service secure.</li>
       <li><strong>Google Fonts</strong> provides the site's typefaces, which means your browser contacts Google to load them.</li>

@@ -6,11 +6,15 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' blob:; worker-src blob:; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
 <script>
 /* PhilanthroData access gate. This page blocks all network connections (so a data file can never leave the browser),
-   so the sign-up form lives on /tools/. First-time visitors who arrive here directly are sent there, then forwarded back.
+   so the sign-up form lives on /tools/. First-time visitors who arrive here directly are sent there.
+   The emailed link adds ?access=1, which unlocks this browser.
    Offline downloaded copies skip this: the download link on /tools/ is already gated. */
 (function(){
   if (location.protocol === "file:") return;
-  try { if (localStorage.getItem("pd_tools_access") === "1") return; } catch (e) { return; }
+  try {
+    if (/[?&]access=/.test(location.search)) { localStorage.setItem("pd_tools_access", "1"); history.replaceState(null, "", location.pathname + location.hash); return; }
+    if (localStorage.getItem("pd_tools_access") === "1") return;
+  } catch (e) { return; }
   var page = location.pathname.replace(/\/$/, "").split("/").pop().replace(/\.html$/, "");
   location.replace("/tools/?gate=" + encodeURIComponent(page));
 })();
