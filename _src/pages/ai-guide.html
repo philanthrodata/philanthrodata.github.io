@@ -1,0 +1,166 @@
+  <section class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow">Free guide</span>
+      <h1>Using AI without the chaos</h1>
+      <p class="lede">A simple system for nonprofit teams. Most nonprofits don't need more AI tools. They need a simple habit: keep what you know in a few short files, and use AI chats as disposable workspaces that read from them.</p>
+      <div class="hero-ctas" style="margin-top:28px;">
+        <a class="btn btn-primary" href="#guide" data-cta="aiguide_top">Get the free guide</a>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:24px;">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">What's inside</span>
+        <h2 class="section-title">Six steps and a monthly checklist</h2>
+        <p class="lead-in">Three pages, written for staff who use AI tools but aren't technical. It works with any AI tool your team uses.</p>
+      </div>
+      <ol class="deliver">
+        <li class="reveal"><strong>Set up one shared folder</strong>A handful of short reference files every tool can read.</li>
+        <li class="reveal"><strong>Write a one-page brief for each project</strong>With a template you can copy.</li>
+        <li class="reveal"><strong>Treat each chat as one task</strong>How to start, work and finish so the next chat is smarter.</li>
+        <li class="reveal"><strong>Know when to start a new chat</strong>Six signs a conversation has run too long.</li>
+        <li class="reveal"><strong>Use AI efficiently</strong>What tokens are, and how to stay inside your plan's limits.</li>
+        <li class="reveal"><strong>Pick the right tool and protect donor data</strong>Which model for which job, and what to keep out.</li>
+        <li class="reveal"><strong>A monthly 15-minute checklist</strong>Five boxes to tick to keep the system current.</li>
+      </ol>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section id="guide">
+    <div class="wrap">
+      <div class="section-head reveal" style="margin:0 auto; text-align:center;">
+        <span class="eyebrow">Free PDF</span>
+        <h2 style="font-size:30px;">Get the guide</h2>
+        <p class="lead-in">Tell me where to reach you and the PDF downloads straight away.</p>
+      </div>
+      <form id="guide-form" class="reveal" method="POST" novalidate>
+        <label for="ck_first">First name <span class="req" aria-hidden="true">*</span></label>
+        <input type="text" id="ck_first" name="firstname" autocomplete="given-name" required>
+        <label for="ck_last">Last name <span class="req" aria-hidden="true">*</span></label>
+        <input type="text" id="ck_last" name="lastname" autocomplete="family-name" required>
+        <label for="ck_email">Email <span class="req" aria-hidden="true">*</span></label>
+        <input type="email" id="ck_email" name="email" autocomplete="email" required>
+        <label for="ck_org">Organization <span class="req" aria-hidden="true">*</span></label>
+        <input type="text" id="ck_org" name="company" autocomplete="organization" required>
+        <input type="text" name="_gotcha" id="ck_hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute; left:-9999px;">
+        <button type="submit" id="ck_btn">Download the guide</button>
+        <div id="ck_status_msg" role="status" style="display:none; text-align:center; font-size:14px; font-weight:500; margin-top:16px;"></div>
+        <p class="hint" style="text-align:center;"><span class="req">*</span> Required. I'll send the occasional useful note, and you can unsubscribe anytime. See the <a href="/privacy/" style="color:var(--ink);">privacy policy</a>.</p>
+      </form>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="wrap">
+      <h2 class="reveal">Want help putting this system in place?</h2>
+      <p class="reveal">I coach nonprofit teams on using AI safely, without risking donor data. Pricing is on a sliding scale, and the first call is free.</p>
+      <div class="hero-ctas reveal">
+        <a class="btn btn-primary" href="/contact/" data-cta="aiguide_bottom">Start a conversation</a>
+        <a class="btn btn-ghost" href="/services/" data-cta="aiguide_services">See services</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+  (function () {
+    'use strict';
+    /* AI guide download.
+       HS_FORM: the HubSpot form for guide leads. Create it in HubSpot (fields: first name, last name,
+       email, company), paste its form ID here and rebuild. While it is "", leads go to Formspree instead,
+       the same inbox as the contact form. Either way the PDF downloads straight after the form sends. */
+    var HS_PORTAL = '247538328', HS_FORM = '';
+    var FORMSPREE = 'https://formspree.io/f/myezbpee';
+    var PDF = '/assets/using-ai-without-the-chaos.pdf', KEY = 'pd_ai_guide', CONTACT = 'chad.priest@philanthrodata.org';
+    var $ = function (id) { return document.getElementById(id); };
+    var form = $('guide-form'), btn = $('ck_btn'), msg = $('ck_status_msg');
+    if (!form) return;
+    var track = function (name, p) { try { if (window.gtag) gtag('event', name, p || {}); } catch (e) {} };
+    var remember = function () { try { localStorage.setItem(KEY, '1'); } catch (e) {} };
+    var known = function () { try { return localStorage.getItem(KEY) === '1'; } catch (e) { return false; } };
+    var download = function () {
+      track('file_download', { file_name: 'using-ai-without-the-chaos.pdf', link_url: PDF });
+      var a = document.createElement('a'); a.href = PDF; a.download = 'PhilanthroData-Using-AI-Without-the-Chaos.pdf';
+      document.body.appendChild(a); a.click(); a.remove();
+    };
+    var show = function (ok, html) {
+      msg.style.display = 'block'; msg.style.color = ok ? '#5C7A6B' : '#A0522D'; msg.innerHTML = html;
+    };
+    var done = function () {
+      remember(); download();
+      show(true, 'Thanks. Your download should start now. If it doesn’t, <a href="' + PDF + '" download style="color:inherit;">click here</a>.');
+      btn.disabled = false; btn.textContent = 'Download again';
+    };
+
+    /* Returning visitors who already filled the form go straight to the file. */
+    if (known()) {
+      btn.textContent = 'Download the guide';
+      var skip = document.createElement('p');
+      skip.className = 'hint'; skip.style.textAlign = 'center';
+      skip.innerHTML = 'Already signed up? <a href="' + PDF + '" download style="color:var(--ink);">Download it again</a>.';
+      form.insertBefore(skip, form.firstChild);
+      skip.querySelector('a').addEventListener('click', function () { track('file_download', { file_name: 'using-ai-without-the-chaos.pdf', link_url: PDF }); });
+    }
+
+    var started = false;
+    form.addEventListener('input', function () { if (!started) { started = true; track('form_start', { form_id: 'ai_guide' }); } });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault(); msg.style.display = 'none';
+      var v = function (id) { return $(id).value.trim(); };
+      var first = v('ck_first'), last = v('ck_last'), email = v('ck_email'), org = v('ck_org');
+      if (!first || !last || !email || !org) { show(false, 'Please fill in all four required fields.'); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(email)) { show(false, 'That email address doesn’t look complete.'); $('ck_email').focus(); return; }
+      if ($('ck_hp').value) return;
+      btn.disabled = true; btn.textContent = 'Sending…';
+      var lead = function () {
+        track('generate_lead', { lead_type: 'guide_download', form_id: 'ai_guide' });
+        try { if (window.clarity) clarity('event', 'generate_lead'); } catch (x) {}
+      };
+      var attrib = {};
+      try { attrib = (window.pdAttribution ? window.pdAttribution().first : {}) || {}; } catch (x) {}
+      var KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'referrer', 'landing_page'];
+
+      var req;
+      if (HS_FORM) {
+        var f = function (n, val) { return { objectTypeId: '0-1', name: n, value: val }; };
+        var base = [f('firstname', first), f('lastname', last), f('email', email), f('company', org)];
+        var extra = KEYS.filter(function (k) { return attrib[k]; }).map(function (k) { return f(k, attrib[k]); });
+        var url = 'https://api.hsforms.com/submissions/v3/integration/submit/' + HS_PORTAL + '/' + HS_FORM;
+        var send = function (fields) {
+          return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fields: fields, context: { pageUri: location.href, pageName: document.title } }) });
+        };
+        /* Extra fields need matching properties on the HubSpot form; if HubSpot rejects them, resend without. */
+        req = send(base.concat(extra)).then(function (r) {
+          if (r.ok || !extra.length || r.status !== 400) return r;
+          return r.clone().json().catch(function () { return {}; }).then(function (j) {
+            var emailErr = (j.errors || []).some(function (x) { return /email/i.test((x.errorType || '') + (x.message || '')); });
+            return emailErr ? r : send(base);
+          });
+        });
+      } else {
+        var data = new FormData(form);
+        data.append('_subject', 'AI guide download: ' + org);
+        data.append('lead_type', 'guide_download');
+        req = fetch(FORMSPREE, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
+      }
+
+      req.then(function (r) {
+        if (r.ok) { lead(); done(); return; }
+        return r.json().catch(function () { return {}; }).then(function (j) {
+          var bad = (j.errors || []).some(function (x) { return /email/i.test((x.errorType || '') + (x.message || '') + (x.field || '')); });
+          btn.disabled = false; btn.textContent = 'Download the guide';
+          if (bad) { show(false, 'That email address was rejected. Check it for typos and try again.'); $('ck_email').focus(); }
+          else { show(false, 'Something went wrong. Try again, or email <a href="mailto:' + CONTACT + '" style="color:inherit;">' + CONTACT + '</a>.'); }
+        });
+      }).catch(function () {
+        /* Form service unreachable: hand over the file rather than block it. */
+        lead(); done();
+      });
+    });
+  })();
+  </script>
