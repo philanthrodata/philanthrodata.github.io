@@ -11,14 +11,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / '_src' / 'pages'
 SITE = 'https://philanthrodata.org'
-ASSET_V = '5'  # bump to bust browser caches after editing assets/site.css or site.js
+ASSET_V = '6'  # bump to bust browser caches after editing assets/site.css or site.js
 
 PAGES = [
     # (body file, output path, url path, nav key, title, description)
     ('home', 'index.html', '/', '', 'PhilanthroData | Data help for nonprofits',
      'Senior data and analytics help for nonprofits too big for spreadsheets and too small for a data team. Sliding-scale pricing, and a handoff your staff can run in 30 minutes a month.'),
     ('services', 'services/index.html', '/services/', 'services', 'Services and pricing | PhilanthroData',
-     'Web analytics, CRM, dashboards and data automation for nonprofits, with sliding-scale pricing, a 3 to 4 week first engagement and a free first call.'),
+     'Reporting and analytics, CRM and data automation, and AI strategy and team coaching for nonprofits, with sliding-scale pricing, a 3 to 4 week first engagement and a free first call.'),
     ('case-studies', 'case-studies/index.html', '/case-studies/', 'case-studies', 'Case studies | PhilanthroData',
      'Results from PhilanthroData engagements with Washington Improv Theater, The Amani Foundation, United Way of Montcalm-Ionia and Portland Wheelers.'),
     ('mission', 'mission/index.html', '/mission/', 'mission', 'Mission | PhilanthroData',
@@ -26,7 +26,7 @@ PAGES = [
     ('about', 'about/index.html', '/about/', 'about', 'About Chad Priest | PhilanthroData',
      'Chad Priest founded PhilanthroData after 15+ years leading enterprise analytics, BI and CRM teams, to help the people who help others.'),
     ('access', 'access/index.html', '/access/', '', 'How access works | PhilanthroData',
-     'How to give PhilanthroData limited, revocable access to GA4, Google Ads, Tag Manager, Search Console and Salesforce, without sharing passwords, and how to remove it.'),
+     'How to give PhilanthroData limited, revocable access to GA4, Google Ads, Tag Manager, Search Console, Salesforce and WordPress, without sharing passwords, and how to remove it.'),
     ('google-ad-grant', 'google-ad-grant/index.html', '/google-ad-grant/', '', 'Google Ad Grant guide and checklist | PhilanthroData',
      'Who qualifies for the Google Ad Grant, what to have ready, how to apply today, and the rules that keep the grant active. Free printable checklist.'),
     ('privacy', 'privacy/index.html', '/privacy/', '', 'Privacy Policy | PhilanthroData',

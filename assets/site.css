@@ -307,3 +307,30 @@ footer .foot-links{line-height:1.9;}
 }
 .wrap.prose{max-width:1120px;}
 .wrap.prose > *{max-width:720px;}
+
+/* Services page: four-step journey and core service cards */
+.story-flow{list-style:none; display:grid; grid-template-columns:repeat(4, 1fr); gap:24px; background:var(--parchment-2); border:1px solid var(--line); border-radius:16px; padding:32px;}
+.story-step{position:relative; text-align:center; min-width:0;}
+.story-num{width:32px; height:32px; border-radius:50%; background:#D9B86B; color:var(--ink-deep); font-weight:700; font-size:14px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;}
+.story-scene{width:100%; max-width:240px; margin:0 auto 14px;}
+.story-scene svg{display:block; width:100%; height:auto;}
+.story-caption{display:block; font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--sage); font-weight:500; margin-bottom:8px;}
+.story-step h3{font-size:18px; margin-bottom:6px;}
+.story-step p{font-size:14px; color:var(--ink-soft);}
+.story-arrow{position:absolute; top:112px; right:-26px; width:28px; height:20px; color:var(--sage); z-index:1;}
+@media (max-width:1023px){ .story-flow{grid-template-columns:repeat(2, 1fr); gap:32px 24px;} .story-arrow{display:none;} }
+@media (max-width:599px){
+  .story-flow{grid-template-columns:1fr; padding:24px 20px; gap:20px;}
+  .story-step:not(:last-child){padding-bottom:36px;}
+  .story-step:not(:last-child)::after{content:'\2193'; position:absolute; bottom:0; left:50%; transform:translateX(-50%); color:var(--sage); font-size:24px; line-height:1;}
+}
+.service-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:24px;}
+.service-card{background:var(--white); border:1px solid var(--line); border-radius:14px; padding:28px; display:flex; flex-direction:column; align-items:flex-start;}
+.service-icon{width:48px; height:48px; border-radius:14px; display:grid; place-items:center; margin-bottom:18px; background:#E8F0EC; color:#34564B;}
+.service-icon svg{width:27px; height:27px;}
+.service-card h3{font-size:20px; margin-bottom:10px;}
+.service-card p{font-size:14.5px; color:var(--ink-soft);}
+.service-card ul{margin:16px 0 26px 18px; font-size:14px; color:var(--ink-soft);}
+.service-card li{margin-top:8px;}
+.service-card .btn{margin-top:auto; align-self:stretch; text-align:center; padding:12px 16px;}
+@media (max-width:900px){ .service-grid{grid-template-columns:1fr;} }
