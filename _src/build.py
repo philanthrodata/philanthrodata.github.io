@@ -29,6 +29,8 @@ PAGES = [
      'How to give PhilanthroData limited, revocable access to GA4, Google Ads, Tag Manager, Search Console, Salesforce and WordPress, without sharing passwords, and how to remove it.'),
     ('google-ad-grant', 'google-ad-grant/index.html', '/google-ad-grant/', '', 'Google Ad Grant guide and checklist | PhilanthroData',
      'Who qualifies for the Google Ad Grant, what to have ready, how to apply today, and the rules that keep the grant active. Free printable checklist.'),
+    ('ai-guide', 'ai-guide/index.html', '/ai-guide/', '', 'Using AI Without the Chaos: free guide for nonprofit teams | PhilanthroData',
+     'A free three-page guide for nonprofit teams: one shared folder, one-page project briefs, and simple rules for using AI tools consistently while protecting donor data.'),
     ('privacy', 'privacy/index.html', '/privacy/', '', 'Privacy Policy | PhilanthroData',
      'What PhilanthroData collects on philanthrodata.org, why, who processes it, and how the free data tools keep your files in your browser.'),
     ('contact', 'contact/index.html', '/contact/', 'contact', 'Start a conversation | PhilanthroData',
@@ -56,7 +58,7 @@ HEAD_TAGS = '''<!-- Google Analytics 4 -->
 </script>'''
 
 FOOT_LINKS = [('/services/', 'Services'), ('/services/#pricing', 'Pricing'), ('/case-studies/', 'Case studies'),
-              ('/tools/', 'Free tools'), ('/mission/', 'Mission'), ('/about/', 'About'), ('/access/', 'How access works'), ('/google-ad-grant/', 'Ad Grant guide'),
+              ('/tools/', 'Free tools'), ('/mission/', 'Mission'), ('/about/', 'About'), ('/access/', 'How access works'), ('/google-ad-grant/', 'Ad Grant guide'), ('/ai-guide/', 'AI guide'),
               ('/contact/', 'Contact'), ('/privacy/', 'Privacy')]
 LEGAL = 'PhilanthroData, Inc. · A Massachusetts nonprofit corporation · EIN 42-4433271 · Applying for 501(c)(3) status · © 2026'
 

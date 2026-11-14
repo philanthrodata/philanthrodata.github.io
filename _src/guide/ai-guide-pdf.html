@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Using AI Without the Chaos: A Simple System for Nonprofit Teams</title>
+<meta name="author" content="PhilanthroData">
+<style>
+@font-face{font-family:'Fraunces'; src:url('FONTS/Fraunces.ttf'); font-weight:100 900;}
+@font-face{font-family:'IBM Plex Mono'; src:url('FONTS/IBMPlexMono-Regular.ttf'); font-weight:400;}
+@font-face{font-family:'IBM Plex Mono'; src:url('FONTS/IBMPlexMono-Medium.ttf'); font-weight:500;}
+@page{size:letter; margin:0.6in 0.75in 0.7in;}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{font-family:'Inter', sans-serif; font-size:9.6pt; line-height:1.45; color:#16283D; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+.cover{background:#F2EDE3; border:0.75pt solid #E0D9CB; border-radius:10pt; margin:0 0 16pt; padding:18pt 22pt 20pt;}
+.brand{display:flex; align-items:center; justify-content:space-between; margin-bottom:18pt;}
+.brand div{display:flex; align-items:center; gap:9pt; font-family:'Fraunces', serif; font-weight:500; font-size:13pt; color:#1F3A5F;}
+.brand img{width:30pt; height:30pt;}
+.brand span{font-family:'IBM Plex Mono', monospace; font-size:7.5pt; letter-spacing:.08em; text-transform:uppercase; color:#5C7A6B; font-weight:500;}
+h1{font-family:'Fraunces', serif; font-weight:500; font-size:25pt; line-height:1.12; color:#1F3A5F; letter-spacing:-0.01em;}
+h1 small{display:block; font-size:15pt; color:#4A5A6B; margin-top:6pt; letter-spacing:0;}
+.by{font-size:8.6pt; color:#4A5A6B; margin-top:9pt;}
+.lede{font-size:11.3pt; line-height:1.5; color:#16283D; margin-bottom:6pt;}
+h2{font-family:'Fraunces', serif; font-weight:500; font-size:15.5pt; color:#1F3A5F; margin:14pt 0 4pt; line-height:1.2; break-after:avoid; display:flex; align-items:center; gap:9pt;}
+h2 b{flex:none; width:19pt; height:19pt; border-radius:50%; background:#B8863B; color:#fff; font-family:'Inter', sans-serif; font-size:9.5pt; font-weight:600; display:inline-flex; align-items:center; justify-content:center;}
+p{margin-top:6pt; color:#3B4A5A;}
+p strong, li strong{color:#16283D; font-weight:600;}
+ul, ol{margin:6pt 0 0 16pt; color:#3B4A5A;}
+li{margin-top:3pt; break-inside:avoid;}
+p{orphans:2; widows:2;}
+.idea{margin-top:10pt; padding:10pt 14pt; background:#fff; border:0.75pt solid #E0D9CB; border-left:2.5pt solid #B8863B; border-radius:0 6pt 6pt 0; color:#16283D; break-inside:avoid;}
+pre{margin-top:8pt; padding:8pt 12pt; background:#F8F5EF; border:0.75pt solid #E0D9CB; border-radius:6pt; font-family:'IBM Plex Mono', monospace; font-size:8pt; line-height:1.5; color:#16283D; white-space:pre; break-inside:avoid;}
+pre i{font-style:normal; color:#5C7A6B;}
+table{width:100%; border-collapse:collapse; margin-top:10pt; font-size:9.2pt; break-inside:avoid;}
+th{text-align:left; font-family:'IBM Plex Mono', monospace; font-size:7.4pt; letter-spacing:.06em; text-transform:uppercase; font-weight:500; color:#1F3A5F; background:#F2EDE3; padding:6pt 8pt; border:0.75pt solid #E0D9CB;}
+td{padding:6pt 8pt; border:0.75pt solid #E0D9CB; vertical-align:top; color:#3B4A5A;}
+td:first-child{color:#16283D; font-weight:600; width:31%;}
+td:last-child{width:27%;}
+.check{list-style:none; margin-left:0;}
+.check li{position:relative; padding-left:20pt; margin-top:6pt;}
+.check li::before{content:''; position:absolute; left:0; top:1.5pt; width:10pt; height:10pt; border:1pt solid #1F3A5F; border-radius:2pt; background:#fff;}
+.about{margin-top:14pt; padding:12pt 16pt; background:#F2EDE3; border:0.75pt solid #E0D9CB; border-radius:8pt; break-inside:avoid;}
+.about h2{margin-top:0;}
+.about a{color:#1F3A5F; font-weight:600; text-decoration:none;}
+a{color:#1F3A5F;}
+.keep{break-inside:avoid;}
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="brand"><div><img src="LOGO" alt="">PhilanthroData</div><span>Free guide · AI for nonprofit teams</span></div>
+  <h1>Using AI Without the Chaos<small>A simple system for nonprofit teams</small></h1>
+  <p class="by">A free guide from PhilanthroData · Chad Priest</p>
+</div>
+
+<p class="lede">Most nonprofits don't need more AI tools. They need a simple habit: keep what you know in a few short files, and use AI chats as disposable workspaces that read from them.</p>
+
+<h2>Why AI feels inconsistent</h2>
+<p>AI tools remember far less than people expect. Most start each new chat knowing nothing about your organization, and even within one chat they lose track as it grows long.</p>
+<p>That's why the same question can get a great answer on Monday and a generic one on Friday. The fix isn't a better tool. It's giving every tool the same short, current reference files.</p>
+<p class="idea"><strong>The one idea:</strong> your files are the memory, and chats are scratch paper. This works with any AI tool your team uses, today or five years from now.</p>
+
+<div class="keep">
+<h2><b>1</b>Set up one shared folder</h2>
+<p>Create one folder in the drive your team already uses, such as Google Drive or SharePoint, and keep it to short, plain documents anyone can open.</p>
+<pre>AI Reference/
+  About Us.doc          <i>mission, programs, audiences, tone of voice</i>
+  How We Write.doc      <i>style rules, words to use and avoid</i>
+  Prompts We Reuse.doc  <i>prompts that worked well, ready to copy</i>
+  Projects/
+    Spring Appeal 2027 – Brief.doc
+    Website Refresh – Brief.doc
+    Volunteer Program – Brief.doc
+  Archive/              <i>finished projects</i></pre>
+</div>
+<ul>
+  <li><strong>Keep each file to about one or two pages.</strong> Short files are quick to paste into any tool.</li>
+  <li><strong>Name one person as the keeper</strong> of About Us and How We Write.</li>
+  <li><strong>Never put passwords or donor personal information</strong> in this folder.</li>
+</ul>
+
+<div class="keep">
+<h2><b>2</b>Write a one-page brief for each project</h2>
+<p>A brief lets any tool, or any new staff member, pick up a project without the backstory. Copy this template and fill it in.</p>
+<pre># [Project name] – Brief
+Last updated: [date]
+
+Goal: What we're trying to achieve, in one sentence.
+Audience: Who this is for.
+Key facts: Dates, numbers, names the AI must get right.
+Decisions so far:
+- [date] what we decided and why
+Open questions:
+- what still needs an answer, and who owns it
+Avoid: Topics, words or claims we never use.</pre>
+</div>
+
+<div class="keep">
+<h2><b>3</b>Treat each chat as one task</h2>
+<p>A chat works best when it has one job, a clear start, and a clear end.</p>
+<ol>
+  <li><strong>Start:</strong> name the chat after the task. Paste in About Us and the project brief, then say exactly what you want back ("a 150-word appeal email for lapsed donors").</li>
+  <li><strong>Work:</strong> stay on that one task. If a new topic comes up, write it down and save it for a fresh chat.</li>
+  <li><strong>Finish:</strong> ask, "Summarize what we decided and anything I should add to the brief." Paste that into the brief, and save the final result in your folder.</li>
+</ol>
+<p>That last step is what makes the next chat smarter than this one.</p>
+</div>
+
+<h2><b>4</b>Know when to start a new chat</h2>
+<p>Start fresh when any of these happens. Ask for a summary first, then paste it into the new chat.</p>
+<ul>
+  <li>You're moving to a different task or project.</li>
+  <li>The AI forgets or contradicts something you told it earlier.</li>
+  <li>Answers get vaguer, repeat themselves, or ignore your instructions.</li>
+  <li>The chat has gone more than about 20 to 30 back-and-forths.</li>
+  <li>You pasted a long document and you're done with it.</li>
+  <li>The tool warns that the conversation is getting long.</li>
+</ul>
+
+<h2><b>5</b>Use AI efficiently</h2>
+<p>AI tools measure work in <strong>tokens</strong>, small pieces of words. One token is about three-quarters of a word, so 1,000 tokens is roughly a page and a half.</p>
+<p>The key fact: every time you send a message, the AI rereads the entire conversation, including everything you pasted. A long chat costs more with every turn, and paid plans' usage limits are based on it.</p>
+<ul>
+  <li><strong>Paste the relevant section,</strong> not the whole 40-page report.</li>
+  <li><strong>Use a brief instead of a long chat history.</strong> A one-page brief replaces dozens of turns.</li>
+  <li><strong>Ask for the length you need:</strong> "5 bullets" or "under 150 words."</li>
+  <li><strong>Turn off extras</strong> such as deep thinking, web search, or connected apps when a task doesn't need them.</li>
+  <li><strong>Use the lighter model</strong> in your tool for simple rewording and formatting.</li>
+</ul>
+
+<div class="keep">
+<h2><b>6</b>Pick the right tool and protect donor data</h2>
+<p>Match the tool to the stakes, and keep personal information out unless you know where it goes.</p>
+<table>
+  <thead><tr><th>Task</th><th>What to use</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr><td>Grant narratives, board reports, strategy</td><td>Your tool's strongest model, with deep thinking on</td><td>Quality matters most here</td></tr>
+    <tr><td>Emails, social posts, newsletters</td><td>Your tool's everyday model</td><td>Good quality, lower usage</td></tr>
+    <tr><td>Rewording, formatting, summaries</td><td>The lightest model available</td><td>Little reasoning needed</td></tr>
+    <tr><td>Anything needing current facts</td><td>A tool with web search turned on</td><td>Otherwise answers may be out of date</td></tr>
+    <tr><td>Donor lists, client records, anything with names or contact details</td><td>Remove or replace personal details first, or use an approved business account</td><td>Protects donors and your reputation</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Before your team relies on any AI tool, check two things in its settings: whether your conversations can be used to train its models, and who in your organization can see shared chats. Many providers offer nonprofit pricing; <a href="https://www.techsoup.org/">TechSoup</a> is a good place to start.</p>
+
+<div class="keep">
+<h2>Monthly 15-minute checklist</h2>
+<ul class="check">
+  <li>Update the "Last updated" date and open questions on each active brief</li>
+  <li>Move finished projects to Archive</li>
+  <li>Add any prompt you reused twice to Prompts We Reuse</li>
+  <li>Check About Us for new programs, staff, or numbers</li>
+  <li>Delete old chats whose work is captured in a brief</li>
+</ul>
+</div>
+
+<div class="about">
+  <h2>About PhilanthroData</h2>
+  <p>PhilanthroData helps nonprofits turn the data they already collect into decisions, without enterprise budgets. We set up and fix Google Analytics, track what matters (donations, volunteers, newsletter signups), and leave your team a monthly review that takes about 30 minutes and no analytics expertise.</p>
+  <p>Founder Chad Priest brings 15+ years of enterprise data and analytics leadership.</p>
+  <p><strong>Want help putting this system in place, or getting your website data working?</strong> Visit <a href="https://philanthrodata.org">philanthrodata.org</a> or email <a href="mailto:chad.priest@philanthrodata.org">chad.priest@philanthrodata.org</a>.</p>
+</div>
+</body>
+</html>

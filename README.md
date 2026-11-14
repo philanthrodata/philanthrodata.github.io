@@ -17,6 +17,7 @@ Most pages share one header, footer and stylesheet. Their content lives in `_src
 | How access works | `_src/pages/access.html` | `access/index.html` |
 | Contact | `_src/pages/contact.html` | `contact/index.html` |
 | Google Ad Grant guide | `_src/pages/google-ad-grant.html` | `google-ad-grant/index.html` |
+| AI guide | `_src/pages/ai-guide.html` | `ai-guide/index.html` |
 | Privacy | `_src/pages/privacy.html` | `privacy/index.html` |
 
 To change one of these pages, edit its content file (or the layout in `_src/build.py`), then run
@@ -35,3 +36,10 @@ The guide at `/google-ad-grant/` gates `assets/google-ad-grant-checklist.pdf` be
 Formspree (same inbox as the contact form) until a HubSpot form ID is pasted into `HS_FORM` near the bottom of
 `_src/pages/google-ad-grant.html`; then they go to HubSpot. The PDF is built by `_src/checklist/make_checklist.py`
 (needs reportlab and static Inter / Fraunces TTFs in a `fonts/` folder next to the script).
+
+## AI guide
+
+The page at `/ai-guide/` gates `assets/using-ai-without-the-chaos.pdf` behind the same kind of form as the Ad Grant
+checklist (Formspree until a HubSpot form ID is pasted into `HS_FORM` in `_src/pages/ai-guide.html`). The PDF's text and
+layout live in `_src/guide/ai-guide-pdf.html`; rebuild it with `python3 _src/guide/make_guide.py <fonts dir>` (needs
+playwright with Chromium, Inter installed, and Fraunces.ttf plus IBMPlexMono-Regular/Medium.ttf in the fonts dir).
