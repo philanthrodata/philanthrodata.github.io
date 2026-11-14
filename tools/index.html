@@ -99,6 +99,10 @@ section{padding-block:80px}
 .tool .go .btn{padding:10px 16px;font-size:14.5px}
 .tool .dl{font-size:13.5px;color:var(--muted)}
 .tool.niche{background:transparent}
+.guide{margin-top:20px;background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:12px;padding:26px;display:grid;grid-template-columns:1fr auto;gap:10px 32px;align-items:center}
+.guide .for{font:500 12px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+.guide p{color:#47536a;font-size:15px;margin-top:8px;max-width:640px}
+@media (max-width:760px){.guide{grid-template-columns:1fr}.guide .btn{justify-self:start;margin-top:8px}}
 /* privacy band */
 .band{background:var(--navy);color:#dfe5ef}
 .band h2{color:#fff}
@@ -237,6 +241,14 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
         <div class="go"><a class="btn line" href="marketo-salesforce-duplicate-check.html">Open the tool</a><a class="dl" href="marketo-salesforce-duplicate-check.html" download>Download to run offline</a></div>
       </article>
     </div>
+    <article class="guide">
+      <div>
+        <div class="for">Free guide · For teams using AI</div>
+        <h3>Using AI Without the Chaos</h3>
+        <p>A simple system for nonprofit teams: one shared folder, one-page project briefs, and clear rules for when to start a new chat and how to protect donor data. Three pages, with a monthly 15-minute checklist.</p>
+      </div>
+      <a class="btn solid" href="/ai-guide/">Get the free guide</a>
+    </article>
   </div>
 </section>
 
